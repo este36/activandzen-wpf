@@ -11,8 +11,18 @@
 
 	<ItemGroup>
 		<Compile Include="AssemblyInfo.cs" />
-		<Compile Include="App.cs" />
+		<Compile Include="App.xaml.cs" />
 		<Compile Include="src\Mainwindow.cs" />
+		<Compile Include="src\Database\Model.cs" />
 		<Compile Include="src\Components\Container.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="App.xaml"/>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="EntityFramework" Version="6.5.1" />
+	  <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.1" />
 	</ItemGroup>
 </Project>

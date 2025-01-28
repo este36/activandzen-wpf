@@ -1,12 +1,13 @@
 using System.Windows.Controls;
 using System.Windows;
 
-public class Container : Border
-{
-    Panel panel;
+namespace ActivAndZen.Components;
 
+public partial class Container : Border
+{
+    Grid m_grid;
     public Container()
     {
-
+        this.m_grid = new Grid();
     }
 }
