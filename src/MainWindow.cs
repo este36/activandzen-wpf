@@ -17,10 +17,10 @@ namespace ActivAndZen;
 /// </summary>
 public partial class MainWindow : Window
 {
-    private Model m_model;
     private Grid m_rootGrid;
+    private TextBox cout;
 
-    public MainWindow(Model model)
+    public MainWindow()
     {
         this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
         this.Title = "Activ & Zen";
@@ -30,7 +30,6 @@ public partial class MainWindow : Window
         this.Width = 800;
         this.PreviewMouseDown += MouseTracker.previewMouseDown;
 
-        this.m_model = model;
         this.m_rootGrid = new Grid();
         this.Content = this.m_rootGrid;
 
@@ -49,18 +48,17 @@ public partial class MainWindow : Window
         cout_border.Background = bgColor;
         cout_border.Margin = new Thickness(10);
 
-        TextBox cout = new TextBox();
-        cout.Background = bgColor;
-        cout.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-        cout.Margin = new Thickness(20);
-        cout.BorderThickness = new Thickness(0);
-        cout.TextWrapping = TextWrapping.Wrap;
-        cout.FontSize = 14.5;
-        cout.IsReadOnly = true;
-        cout.Text = "Hello, World !";
-        cout.Cursor = Cursors.Arrow;
+        this.cout = new TextBox();
+        this.cout.Background = bgColor;
+        this.cout.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+        this.cout.Margin = new Thickness(20);
+        this.cout.BorderThickness = new Thickness(0);
+        this.cout.TextWrapping = TextWrapping.Wrap;
+        this.cout.FontSize = 14.5;
+        this.cout.IsReadOnly = true;
+        this.cout.Cursor = Cursors.Arrow;
 
-        cout_border.Child = cout;
+        cout_border.Child = this.cout;
         Grid.SetColumn(cout_border, 1);
         m_rootGrid.Children.Add(cout_border);
 
@@ -88,28 +86,38 @@ public partial class MainWindow : Window
             },
         };
 
-        debugBTN.MouseUp += MouseTracker.DefineClick(() =>
+        debugBTN.MouseUp += MouseTracker.DefineClick(async () =>
         {
-            MessageBox.Show("Hello, Custom BTN");
+            this.cout.AppendText("Asking Database...\r\n");
+            string dbresult = await AskDatabase();
+            this.cout.AppendText(dbresult);
         });
-        debugBTN.MouseEnter += (sender, e) =>
-        {
-            debugBTN.Background = Brushes.Gold;
-            debugBTN.Cursor = Cursors.Hand;
-        };
-        debugBTN.MouseLeave += (sender, e) =>
-        {
-            debugBTN.Background = new SolidColorBrush(Color.FromRgb(0xff, 0xcc, 0x33));
-            debugBTN.Cursor = Cursors.Arrow;
-        };
 
         leftgrid.Children.Add(debugBTN);
         m_rootGrid.Children.Add(leftgrid);
     }
 
-    public void btnTest_Click(object sender, RoutedEventArgs e)
+    public async Task<string> AskDatabase()
     {
-        MessageBox.Show("Hello !");
+        await Task.Delay(3000);
+
+        List<string> result_query = Model.Ask<string>("SELECT id, name FROM clients", (l, dr) =>
+        {
+            int id = dr.GetInt32(0);  // Récupère la colonne 0 (id)
+            string name = dr.GetString(1); // Récupère la colonne 1 (name)
+            l.Add($"ID: {id}, Nom: {name} ");
+        });
+
+        string result_str = "";
+
+        if (result_query.Count == 0)
+        {
+            this.cout.AppendText("No data received.");
+        } else
+        {
+            result_query.ForEach((s) => result_str += s + "\r\n");
+        }
+        return await Task.FromResult(result_str);
     }
 
     public void DefineCols(Grid grid, List<GridLength> gridLengths)

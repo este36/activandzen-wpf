@@ -3,5 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:local="clr-namespace:ActivAndZen.Components">
     <Application.Resources>
+		<Brush/>
     </Application.Resources>
 </Application>

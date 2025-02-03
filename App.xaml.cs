@@ -35,7 +35,7 @@ public static class MouseTracker
         {
             if (MouseTracker.WasDown((UIElement)e.OriginalSource))
             {
-                action();
+               action();
             }
             MouseTracker.Reset();
         };
@@ -44,14 +44,11 @@ public static class MouseTracker
 
 public partial class App : Application
 {
-    private Model? model;
-
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
 
-        this.model = new Model();
-        MainWindow mainWindow = new MainWindow(this.model);
+        MainWindow mainWindow = new MainWindow();
         mainWindow.Show();
     }
 
