@@ -287,6 +287,7 @@ public class TransparantTextBox : TextBox
     public Action ?TextChange;
 
     public TransparantTextBox() {
+        this.FontSize = 13;
         this.Background = Brushes.Transparent;
         this.Background.Freeze();
         this.BorderThickness = new(0);
@@ -356,8 +357,8 @@ public class SearchBarText : TransparantTextBox
 public class SearchBarResetButton : Container 
 {
     public SearchBarResetButton() {
-        double m = 2;
-        this.Margin = new(m,m*2,m,m*2);
+        double m = 2.5;
+        this.Margin = new(m,m*1.5,m,m*1.5);
         this.HoverBgColor = Brushes.LightGray;
 
         // this.BorderThickness = new(0.5);
@@ -394,22 +395,22 @@ public class SearchBar : Container
     public double TotalWidth;
 
     public SearchBar() {
-        this.TotalWidth = 300;
+        this.TotalWidth = 310;
         this.Cursor = Cursors.IBeam;
         BackgroundColor = Utils.RGBA("#f0f0f0");
         HoverBgColor = Brushes.WhiteSmoke;// Utils.RGBA("#f9f9f9");
         BorderColor = Brushes.LightGray;
         BorderThickness = new(0.5);
         CornerRadius = new(10);
-        double _m = 5;
-        Margin = new(0,_m+1,0,_m);
+        double _m = 4.5;
+        Margin = new(0,_m+0.9,0,_m);
 
         DrawingBrush searchIcon = App.Icons.Search.Clone();
         Utils.ChangeDrawingColor(searchIcon, Utils.RGBA("#808080"));
         searchIcon.Freeze();
 
         double IconSideMargin = 12;
-        double IconLength = 12;
+        double IconLength = 12.5;
 
         Icon = new(IconLength, IconLength, searchIcon){
             Margin = new(IconSideMargin,0,IconSideMargin,0)

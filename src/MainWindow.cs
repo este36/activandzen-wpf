@@ -167,7 +167,7 @@ public partial class MainWindow : Window
             }
 
             _activePopup = value;
-            InvalidateVisual();
+            // InvalidateVisual();
         }
     }
 
