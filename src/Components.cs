@@ -313,11 +313,11 @@ public class SearchBarText : TransparantTextBox
                 App.Window.ActivePopup = PopupEnum.UNSET;
             } else {
                 App.Window.Header.SearchBar.ResetButton.Width = 20;
-                if (App.Window.ActivePopup != PopupEnum.SEARCH) App.Window.ActivePopup = PopupEnum.SEARCH;
+                App.Window.ActivePopup = PopupEnum.SEARCH;
             }
         } else {
             App.Window.Header.SearchBar.ResetButton.Width = 0;
-            App.Window.ActivePopup = Popups.PopupEnum.UNSET;
+            App.Window.ActivePopup = PopupEnum.UNSET;
         }
 
         
@@ -325,7 +325,12 @@ public class SearchBarText : TransparantTextBox
 
     protected override void OnGotFocus(RoutedEventArgs e) {
         base.OnGotFocus(e);
-        if (this.Text == Placeholder) this.Text = "";
+        if (this.Text == Placeholder) {
+            this.Text = "";
+        } else if (this.Text != "") {
+            App.Window.ActivePopup = PopupEnum.SEARCH;
+        }
+
         App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.HoverBgColor;
     }
 
@@ -343,6 +348,7 @@ public class SearchBarText : TransparantTextBox
             ) {
             App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.BackgroundColor;
             if (this.Text == "") this.Text = Placeholder;
+            App.Window.ActivePopup = PopupEnum.UNSET;
         }
     }
 }
@@ -391,7 +397,7 @@ public class SearchBar : Container
         this.TotalWidth = 300;
         this.Cursor = Cursors.IBeam;
         BackgroundColor = Utils.RGBA("#f0f0f0");
-        HoverBgColor = Utils.RGBA("#f9f9f9");
+        HoverBgColor = Brushes.WhiteSmoke;// Utils.RGBA("#f9f9f9");
         BorderColor = Brushes.LightGray;
         BorderThickness = new(0.5);
         CornerRadius = new(10);

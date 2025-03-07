@@ -146,6 +146,7 @@ public partial class MainWindow : Window
     public PopupEnum ActivePopup {
         get => _activePopup;
         set {
+            if (value == _activePopup) return;
             // On dois désactiver le popup actuel d'abord
             switch(_activePopup) {
                 case PopupEnum.SEARCH:          
