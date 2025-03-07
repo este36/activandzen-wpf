@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="BuildingIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795277,37.795897"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-94.48819,-170.07813">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="94.48819,170.07875,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ffaa0000">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 98.7832 170.078 a 4.29492 4.29492 0 0 0 -4.29492 4.29492 v 30.0645 h 19.4805 a 10.5475 10.5475 0 0 1 -1.87695 -2.86328 H 97.3516 v -27.2012 a 1.43164 1.43164 0 0 1 1.43164 -1.43164 h 14.3164 a 1.43164 1.43164 0 0 1 1.43164 1.43164 v 15.2793 a 10.5475 10.5475 0 0 1 2.86328 -1.93555 v -7.61719 h 7.15821 a 1.43164 1.43164 0 0 1 1.43164 1.43164 v 6.14454 a 10.5475 10.5475 0 0 1 2.86328 1.86328 v -8.00782 a 4.29492 4.29492 0 0 0 -4.29492 -4.29492 h -7.15821 v -2.86328 a 4.29492 4.29492 0 0 0 -4.29492 -4.29492 z m 1.43165 7.1582 v 2.86328 h 4.29492 v -2.86328 z m 7.1582 0 v 2.86328 h 4.29492 v -2.86328 z m -7.1582 5.72656 v 2.86329 h 4.29492 v -2.86329 z m 7.1582 0 v 2.86329 h 4.29492 v -2.86329 z m 12.8848 0 v 2.86329 h 2.86328 v -2.86329 z m -20.043 5.72657 v 2.86328 h 4.29492 v -2.86328 z m 7.1582 0 v 2.86328 h 4.29492 v -2.86328 z m -7.1582 5.72656 v 2.86328 h 4.29492 v -2.86328 z m 7.1582 0 v 2.86328 h 3.81836 a 10.5475 10.5475 0 0 1 0.41016 -2.86328 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="0.558139,0.0,0.0,0.558139,-68.1192,91.8514">
+                <GeometryDrawing Brush="#ff44aa00">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="m 340.175 171.969 a 17.0079 17.0079 0 1 0 17.0079 17.0079 a 17.0263 17.0263 0 0 0 -17.0079 -17.0079 z m 0 31.1811 a 14.1732 14.1732 0 1 1 14.1732 -14.1732 a 14.1888 14.1888 0 0 1 -14.1732 14.1732 z m 7.0866 -14.1732 a 1.41732 1.41732 0 0 1 -1.41732 1.41732 h -4.25198 v 4.25194 a 1.41733 1.41733 0 0 1 -2.83464 0 v -4.25194 h -4.25194 a 1.41734 1.41734 0 0 1 0 -2.83468 h 4.25194 v -4.25192 a 1.41733 1.41733 0 0 1 2.83464 0 v 4.25192 h 4.25198 a 1.41732 1.41732 0 0 1 1.41732 1.41736 z" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource BuildingIcon}" x:Key="db_BuildingIcon"/>
+</ResourceDictionary>

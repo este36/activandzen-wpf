@@ -12,9 +12,12 @@
 	<ItemGroup>
 		<Compile Include="AssemblyInfo.cs" />
 		<Compile Include="App.xaml.cs" />
+		<Compile Include="AppResources.cs" />
+
 		<Compile Include="src\Mainwindow.cs" />
-		<Compile Include="src\Database\Model.cs" />
-		<Compile Include="src\Components\Container.cs" />
+		<Compile Include="src\Popups.cs" />
+		<Compile Include="src\Model.cs" />
+		<Compile Include="src\Components.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

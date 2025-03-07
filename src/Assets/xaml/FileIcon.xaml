@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="FileIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795911,37.795947"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-170.07813,-170.07808">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="170.07877,170.07875,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff4065ba">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 174.371 170.078 a 4.29311 4.30049 0 0 0 -4.29297 4.30078 v 30.1035 h 19.5 a 10.5566 10.5164 0 0 1 -1.9043 -2.86719 h -14.7324 v -27.2363 a 1.43104 1.4335 0 0 1 1.42969 -1.43359 h 11.4492 v 10.0351 h 10.0176 v 3.9668 a 10.5566 10.5164 0 0 1 1.48046 -0.10547 a 10.5566 10.5164 0 0 1 1.38086 0.0937 v -5.98242 l -10.8555 -10.875 z m 14.3105 4.89453 l 5.13281 5.14063 h -5.13281 z m -11.4473 12.3086 v 2.86719 h 12.4297 a 10.5566 10.5164 0 0 1 1.88086 -1.58984 v -1.27735 z m 0 5.73438 v 2.86523 h 9.63281 a 10.5566 10.5164 0 0 1 0.38477 -1.6582 v -1.20703 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="0.558621,0.0,0.0,0.5564930000000001,7.29845,92.1936">
+                <GeometryDrawing Brush="#ff44aa00">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="m 340.175 171.969 a 17.0079 17.0079 0 1 0 17.0079 17.0079 a 17.0263 17.0263 0 0 0 -17.0079 -17.0079 z m 0 31.1811 a 14.1732 14.1732 0 1 1 14.1732 -14.1732 a 14.1888 14.1888 0 0 1 -14.1732 14.1732 z m 7.0866 -14.1732 a 1.41732 1.41732 0 0 1 -1.41732 1.41732 h -4.25198 v 4.25194 a 1.41733 1.41733 0 0 1 -2.83464 0 v -4.25194 h -4.25194 a 1.41734 1.41734 0 0 1 0 -2.83468 h 4.25194 v -4.25192 a 1.41733 1.41733 0 0 1 2.83464 0 v 4.25192 h 4.25198 a 1.41732 1.41732 0 0 1 1.41732 1.41736 z" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource FileIcon}" x:Key="db_FileIcon"/>
+</ResourceDictionary>

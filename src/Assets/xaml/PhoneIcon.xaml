@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="PhoneIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795284,37.795298"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-94.48819,-245.66928">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="94.488197,245.66928,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff000000">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 132.278 255.505 c 0 12.0277 -15.9478 27.9598 -27.9598 27.9598 c -2.62909 0 -5.08502 -0.99182 -6.89547 -2.80227 l -1.57431 -1.81046 c -1.8262 -1.8262 -1.8262 -4.91185 0.07872 -6.81678 c 0.04721 -0.0472 3.84132 -2.9597 3.84132 -2.9597 c 1.88918 -1.79472 4.86463 -1.79472 6.73806 0 l 2.29849 1.84194 c 5.03779 -2.14105 8.61148 -5.73048 10.91 -10.9415 l -1.8262 -2.29849 c -1.81046 -1.87343 -1.81046 -4.86461 0 -6.73805 c 0 0 2.91247 -3.79409 2.9597 -3.84132 c 1.90491 -1.90492 4.99057 -1.90492 6.89548 0 l 1.65303 1.43262 c 1.88917 1.87344 2.88098 4.32937 2.88098 6.95846 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource PhoneIcon}" x:Key="db_PhoneIcon"/>
+</ResourceDictionary>

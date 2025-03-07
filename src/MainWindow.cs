@@ -1,139 +1,177 @@
-﻿using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
+using System.Windows.Controls.Primitives;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Shell;
+using ActivAndZen.Components;
+using ActivAndZen.Popups;
+using System.Windows.Input;
 
 namespace ActivAndZen;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
-    private Grid m_rootGrid;
-    private TextBox cout;
+    public static double HeaderHeight {get;set;}
+    public static Brush ?BackgroundColor {get;set;}
+    public static double WinMargin {get;set;}
+    public static readonly double WinHeight = 1080;
+    public static readonly double WinWidth = 1920;
+    public static bool TextBoxIsFocus = false;
 
-    public MainWindow()
-    {
-        this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-        this.Title = "Activ & Zen";
-        this.MinHeight = 600;
-        this.Height = 600;
-        this.MinWidth = 800;
-        this.Width = 800;
-        this.PreviewMouseDown += MouseTracker.previewMouseDown;
+    public WindowHeader Header;
+    public ToolsHeader ToolsHeader;
+    public SideNavigation SideNavigation;
+    public Popups.Search ?PopupSearch;
+    public Popups.NewEmployee ?PopupNewClient;
+    public Popups.NewEmployee ?PopupNewEmployee;
+    public TextBlock MainContent = new TextBlock {
+         Background = Brushes.Honeydew,
+         Text = "INIT"
+    };
 
-        this.m_rootGrid = new Grid();
-        this.Content = this.m_rootGrid;
+    public Button UnvalidButton = new Button() { // bouton invisible pour unfocus les textbox 
+        Height = 0,
+        Width = 0
+    };
 
-        DefineCols(m_rootGrid, new List<GridLength>
-        {
-            new GridLength(25, GridUnitType.Star),
-            new GridLength(75, GridUnitType.Star)
-        });
+    private readonly Grid m_rootGrid;
+    private List<Key> KeysDown;
+    private PopupEnum _activePopup;
 
-        //System.Windows.Media.Brush bgColor = (Brush)App.GetResource("MyBrush");
-        System.Windows.Media.Brush bgColor = Brushes.WhiteSmoke;
+    public MainWindow() {
+        _activePopup = PopupEnum.UNSET;
+        WinMargin = 3;
+        HeaderHeight = 40;
+        BackgroundColor = Utils.RGBA("#f0edea");
+        this.Background = BackgroundColor;
 
-        Border cout_border = new Border();
-        cout_border.BorderThickness = new Thickness(0);
-        cout_border.CornerRadius = new CornerRadius(20);
-        cout_border.Background = bgColor;
-        cout_border.Margin = new Thickness(10);
+        WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        ResizeMode = ResizeMode.CanResize;
+        Title = "Activ & Zen";
+        MinHeight = WinHeight/2;
+        MinWidth = WinWidth/2;
+        Height = WinHeight/1.5;
+        Width = WinWidth/1.5;
+        PreviewMouseDown += MouseTracker.previewMouseDown;
+        UseLayoutRounding = true;
+        this.KeysDown = new();
 
-        this.cout = new TextBox();
-        this.cout.Background = bgColor;
-        this.cout.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-        this.cout.Margin = new Thickness(20);
-        this.cout.BorderThickness = new Thickness(0);
-        this.cout.TextWrapping = TextWrapping.Wrap;
-        this.cout.FontSize = 14.5;
-        this.cout.IsReadOnly = true;
-        this.cout.Cursor = Cursors.Arrow;
+        WindowChrome chrome = new() {
+            CaptionHeight = HeaderHeight, // Supprime la zone de titre par défaut
+            CornerRadius = new(0),
+            GlassFrameThickness = new(1),
+            ResizeBorderThickness = new Thickness(WinMargin), // Zone de redimensionnement invisible
+        };
+        WindowChrome.SetWindowChrome(this, chrome);
 
-        cout_border.Child = this.cout;
-        Grid.SetColumn(cout_border, 1);
-        m_rootGrid.Children.Add(cout_border);
+        this.ResizeMode = ResizeMode.CanResizeWithGrip;
 
-        Grid leftgrid = new Grid();
-        DefineRows(leftgrid, new List<GridLength>
-        {
-            new GridLength(20, GridUnitType.Star),
-            new GridLength(80, GridUnitType.Star)
-        });
-        Grid.SetColumn(leftgrid, 0);
+        Header = new WindowHeader();
+        ToolsHeader = new ToolsHeader();
+        SideNavigation = new SideNavigation();
 
-        int mrgn = 35;
-        Border debugBTN = new Border
-        {
-            CornerRadius = new CornerRadius(25),
-            Background = new SolidColorBrush(Color.FromRgb(0xff, 0xcc, 0x33)),
-            Margin = new Thickness(mrgn,mrgn,mrgn - 10,mrgn),
-            Child = new TextBlock
-            {
-                Background = Brushes.Transparent,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                FontSize = 20,
-                Text = "Click"
-            },
+        m_rootGrid = new Grid() {
+            Background = BackgroundColor,
+            // Margin = new(WinMargin), // new(m_winMargin,0,m_winMargin,0),
+            Children = {
+                new GridExt {
+                    Rows = [
+                        new GridElement(new(HeaderHeight, GridUnitType.Pixel), Header) ,
+                        new GridElement(new(1, GridUnitType.Star), 
+                            new GridExt {
+                                Rows = [
+                                    new GridElement(new(45, GridUnitType.Pixel), ToolsHeader),
+                                    new GridElement(new(1, GridUnitType.Star), new GridExt {
+                                        Columns = [
+                                            new GridElement(new(SideNavigation.Width, GridUnitType.Pixel), SideNavigation),
+                                            new GridElement(new(1, GridUnitType.Star), new GridExt {
+                                                Columns = [
+                                                    new GridElement(new(1, GridUnitType.Star)),
+                                                    new GridElement(new(this.MinWidth - SideNavigation.Width, GridUnitType.Pixel), MainContent),
+                                                    new GridElement(new(1, GridUnitType.Star)),
+                                                ]
+                                            })
+                                        ]
+                                    }),
+                                ],
+                            }),
+                        // bouton invisible pour unfocus les textbox 
+                        new GridElement(new(0, GridUnitType.Pixel), UnvalidButton)
+                    ]
+                },
+            }
         };
 
-        debugBTN.MouseUp += MouseTracker.DefineClick(async () =>
-        {
-            this.cout.AppendText("Asking Database...\r\n");
-            string dbresult = await AskDatabase();
-            this.cout.AppendText(dbresult);
-        });
-
-        leftgrid.Children.Add(debugBTN);
-        m_rootGrid.Children.Add(leftgrid);
+        this.Focusable = true;
+        this.MouseDown += Window_MouseDown;
+        Content = m_rootGrid;
+        this.InvalidateVisual();
     }
 
-    public async Task<string> AskDatabase()
-    {
-        await Task.Delay(3000);
+    protected override void OnKeyDown(KeyEventArgs e) {
+        base.OnKeyDown(e);
 
-        List<string> result_query = Model.Ask<string>("SELECT id, name FROM clients", (l, dr) =>
-        {
-            int id = dr.GetInt32(0);  // Récupère la colonne 0 (id)
-            string name = dr.GetString(1); // Récupère la colonne 1 (name)
-            l.Add($"ID: {id}, Nom: {name} ");
-        });
-
-        string result_str = "";
-
-        if (result_query.Count == 0)
-        {
-            this.cout.AppendText("No data received.");
-        } else
-        {
-            result_query.ForEach((s) => result_str += s + "\r\n");
+        switch (e.Key) {
+            case Key.Escape:
+                if (this.KeysDown.Count > 0) this.KeysDown.Clear();
+                if (TextBoxIsFocus) {
+                    this.UnvalidButton.Focus();
+                    TextBoxIsFocus = false;
+                }
+                break;
         }
-        return await Task.FromResult(result_str);
     }
 
-    public void DefineCols(Grid grid, List<GridLength> gridLengths)
+    protected override void OnStateChanged(EventArgs e)
     {
-        gridLengths.ForEach(e =>
-        {
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = e });
-        });
+        base.OnStateChanged(e);
+        if (WindowState == WindowState.Maximized) {
+            m_rootGrid.Margin = new Thickness(5 + WinMargin);
+        }
+        else {
+            m_rootGrid.Margin = new Thickness(0);
+            this.Header.WinFullScreenToggle.Icon.SetIcon(App.Icons.WinFullScreenOn);
+        }
     }
 
-    public void DefineRows(Grid grid, List<GridLength> gridLengths)
-    {
-        gridLengths.ForEach(e =>
-        {
-            grid.RowDefinitions.Add(new RowDefinition { Height = e });
-        });
+
+    private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+        // pour unfocus les textbox
+        if (TextBoxIsFocus) {
+            this.UnvalidButton.Focus();
+            TextBoxIsFocus = false;
+        }
+    }
+
+    public PopupEnum ActivePopup {
+        get => _activePopup;
+        set {
+            // On dois désactiver le popup actuel d'abord
+            switch(_activePopup) {
+                case PopupEnum.SEARCH:          
+                    if (this.PopupSearch != null) this.PopupSearch.IsOpen = false; break;
+                case PopupEnum.NEW_EMPLOYEE:    
+                    if (this.PopupNewEmployee != null) this.PopupNewEmployee.IsOpen = false; break;
+                case PopupEnum.NEW_CLIENT:      
+                    if (this.PopupNewClient != null) this.PopupNewClient.IsOpen = false; break;
+            }
+            // Puis on active le popup demandé
+            switch (value) {
+                case PopupEnum.SEARCH:
+                    if (this.PopupSearch == null) this.PopupSearch = new();
+                    this.PopupSearch.IsOpen = true; 
+                    break;
+                // case PopupEnum.NEW_EMPLOYEE:    this.PopupNewEmployee.IsOpen = true; break;
+                // case PopupEnum.NEW_CLIENT:      this.PopupNewClient.IsOpen = true; break;
+            }
+
+            _activePopup = value;
+            InvalidateVisual();
+        }
+    }
+
+    public void ChangeContent(string s) {
+        this.MainContent.Text = s; 
     }
 }
 

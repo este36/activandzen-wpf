@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="YesIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.797198,37.795277"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-774.80124,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="774.80316,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="0.0744726,0.0,0.0,0.0744726,774.801,94.044">
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="m 163.865 436.934 c -14.406 0.006 -28.222 -5.72 -38.4 -15.915 L 9.369 304.966 c -12.492 -12.496 -12.492 -32.752 0 -45.248 v 0 c 12.496 -12.492 32.752 -12.492 45.248 0 L 163.865 368.966 L 452.889 79.942 c 12.496 -12.492 32.752 -12.492 45.248 0 v 0 c 12.492 12.496 12.492 32.752 0 45.248 L 202.265 421.019 c -10.178 10.195 -23.994 15.921 -38.4 15.915 z" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource YesIcon}" x:Key="db_YesIcon"/>
+</ResourceDictionary>

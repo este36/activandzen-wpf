@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="SearchIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795298,37.795277"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-1001.5748,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="1001.5748,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="0.0735676,0.0,0.0,0.0735676,1001.58,94.4882">
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="M 504.352 459.061 L 404.917 359.584 C 479.319 260.157 459.032 119.24 359.605 44.838 C 260.178 -29.564 119.261 -9.277 44.859 90.15 c -74.402 99.427 -54.115 240.344 45.312 314.746 c 79.868 59.766 189.565 59.766 269.434 0 l 99.477 99.477 c 12.501 12.501 32.769 12.501 45.269 0 c 12.501 -12.501 12.501 -32.769 0 -45.269 z M 225.717 385.696 c -88.366 0 -160 -71.634 -160 -160 c 0 -88.366 71.634 -160 160 -160 c 88.366 0 160 71.634 160 160 c -0.094 88.326 -71.673 159.906 -160 160 z" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource SearchIcon}" x:Key="db_SearchIcon"/>
+</ResourceDictionary>

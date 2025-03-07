@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="CrossIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795295,37.795277"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-170.07875,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="170.07877,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff000000">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 195.263 113.317 l 11.3312 -11.33 a 4.38175 4.37676 0 0 0 -6.18411 -6.17707 l -11.3429 11.3183 l -11.3633 -11.3533 a 4.38316 4.37816 0 1 0 -6.19873 6.19165 l 11.3663 11.3504 l -11.3312 11.327 a 4.38175 4.37676 0 1 0 6.18704 6.17998 l 11.34 -11.3183 l 11.3283 11.3183 a 4.38316 4.37816 0 0 0 6.19872 -6.19164 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource CrossIcon}" x:Key="db_CrossIcon"/>
+</ResourceDictionary>

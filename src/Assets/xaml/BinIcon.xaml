@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="BinIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795277,37.79528"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-699.21259,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="699.21259,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="1.5693261,0.0,0.0,1.5748032000000003,699.27834,94.488192">
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="M 22 4 H 17 V 2 A 2 2 0 0 0 15 0 H 9 A 2 2 0 0 0 7 2 V 4 H 2 v 2 h 2 v 15 a 3 3 0 0 0 3 3 h 10 a 3 3 0 0 0 3 -3 V 6 h 2 z M 9 2 h 6 V 4 H 9 Z m 9 19 a 1 1 0 0 1 -1 1 H 7 A 1 1 0 0 1 6 21 V 6 h 12 z" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="9.0,10.0,2.0,8.0"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <RectangleGeometry Rect="13.0,10.0,2.0,8.0"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource BinIcon}" x:Key="db_BinIcon"/>
+</ResourceDictionary>

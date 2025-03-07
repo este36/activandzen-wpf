@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="CopyIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795313,37.79528"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-94.48819,-94.488193">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="94.488228,94.488197,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="-1.8897641,0.0,0.0,1.8897641,136.063,90.708665">
+                <GeometryDrawing Brush="#ff000000">
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="M 7 5 C 7 3.34315 8.34315 2 10 2 h 9 c 1.6569 0 3 1.34315 3 3 v 9 c 0 1.6569 -1.3431 3 -3 3 h -2 v 2 c 0 1.6569 -1.3431 3 -3 3 H 5 C 3.34315 22 2 20.6569 2 19 V 10 C 2 8.34315 3.34315 7 5 7 h 2 z m 2 2 h 5 c 1.6569 0 3 1.34315 3 3 v 5 h 2 c 0.5523 0 1 -0.4477 1 -1 V 5 C 20 4.44772 19.5523 4 19 4 H 10 C 9.44772 4 9 4.44772 9 5 Z M 5 9 C 4.44772 9 4 9.44772 4 10 v 9 c 0 0.5523 0.44772 1 1 1 h 9 c 0.5523 0 1 -0.4477 1 -1 V 10 C 15 9.44772 14.5523 9 14 9 Z"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource CopyIcon}" x:Key="db_CopyIcon"/>
+</ResourceDictionary>

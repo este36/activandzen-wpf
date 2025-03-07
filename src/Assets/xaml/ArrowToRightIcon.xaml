@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="ArrowToRightIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.813155,37.795277"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-548.03148,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="548.03149,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff000000">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 550.729 110.685 h 27.012 l -8.88694 -8.88694 a 2.7012 2.7012 0 0 1 0 -3.83571 a 2.7012 2.7012 0 0 1 3.80869 0 l 11.5881 11.6151 a 5.40239 5.40239 0 0 1 1.59371 3.80869 v 0 a 5.40239 5.40239 0 0 1 -1.59371 3.78168 l -11.5881 11.6151 a 2.70272 2.70272 0 1 1 -3.80869 -3.83571 l 8.88694 -8.85992 h -27.012 a 2.7012 2.7012 0 0 1 0 -5.40239 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource ArrowToRightIcon}" x:Key="db_ArrowToRightIcon"/>
+</ResourceDictionary>

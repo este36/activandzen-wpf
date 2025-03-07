@@ -3,6 +3,34 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:local="clr-namespace:ActivAndZen.Components">
     <Application.Resources>
-		<Brush/>
-    </Application.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="src/Assets/xaml/ArrowToLeftIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/ArrowToRightIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/BinIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/BuildingIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/CheckboxNoIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/CheckboxYesIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/CopyIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/CrossIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/DotsIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/EmailIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/FileIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/ListOpenIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/MainIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/ModifyIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/PersonIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/PhoneIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/PlusIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/PointerDownIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/RefreshIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/SearchIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/WinCloseIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/WinFullScreenOffIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/WinFullScreenOnIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/WinMinimizeIcon.xaml"/>
+				<ResourceDictionary Source="src/Assets/xaml/YesIcon.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</Application.Resources>
 </Application>

@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="CheckboxYesIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795284,37.79528"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-321.25982,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="321.25983,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff000000">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 350.394 132.283 h -20.4725 c -4.78139 -0.005 -8.65615 -3.88 -8.66139 -8.66139 v -20.4725 c 0.005 -4.7814 3.88 -8.65616 8.66139 -8.6614 h 20.4724 c 4.78147 0.0052 8.65623 3.88 8.66147 8.6614 V 123.622 c -0.005 4.78147 -3.88 8.65623 -8.6614 8.66147 z M 329.921 99.2126 c -2.17433 0 -3.93698 1.76265 -3.93698 3.93699 V 123.622 c 0 2.17441 1.76265 3.93706 3.93698 3.93706 h 20.4724 c 2.17441 0 3.93706 -1.76265 3.93706 -3.93698 v -20.4725 c 0 -2.17434 -1.76265 -3.93699 -3.93699 -3.93699 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <GeometryDrawing Brush="#ff000000">
+                <GeometryDrawing.Geometry>
+                    <PathGeometry Figures="m 336.483 122.499 c -0.99375 0.00064 -1.94646 -0.39626 -2.64567 -1.10234 l -4.70396 -4.69606 c -0.92281 -0.92222 -0.92326 -2.41787 -0.00096 -3.34068 c 0.00032 -0.00032 0.00064 -0.00064 0.00096 -0.00096 v 0 c 0.92244 -0.92214 2.41771 -0.92214 3.34016 0 l 4.00947 4.00785 l 11.3575 -11.3575 c 0.92244 -0.92215 2.41772 -0.92215 3.34015 0 v 0 c 0.92281 0.92222 0.92326 2.41786 0.00097 3.34067 c -0.00032 0.00032 -0.00065 0.00065 -0.00097 0.00097 l -12.0535 12.0536 c -0.69995 0.70312 -1.652 1.09724 -2.64412 1.09451 z" FillRule="Nonzero"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource CheckboxYesIcon}" x:Key="db_CheckboxYesIcon"/>
+</ResourceDictionary>

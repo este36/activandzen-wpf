@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Markup;
 using Microsoft.Data.Sqlite;
 
-namespace ActivAndZen;
+namespace ActivAndZen.Model;
 
 public static class Model
 {

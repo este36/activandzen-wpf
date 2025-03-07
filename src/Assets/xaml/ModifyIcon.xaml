@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<ResourceDictionary xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+    <DrawingGroup x:Key="ModifyIcon">
+        <DrawingGroup.ClipGeometry>
+            <RectangleGeometry Rect="0.0,0.0,37.795313,37.795277"/>
+        </DrawingGroup.ClipGeometry>
+        <DrawingGroup Transform="1.0,0.0,0.0,1.0,-18.8976,-94.48819">
+            <GeometryDrawing>
+                <GeometryDrawing.Geometry>
+                    <RectangleGeometry Rect="18.8976,94.48819,37.795277,37.795277"/>
+                </GeometryDrawing.Geometry>
+            </GeometryDrawing>
+            <DrawingGroup Transform="1.0,0.0,0.0,1.0,84.4863,262.465">
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#ff000000" LineJoin="Round" Thickness="3.59371" DashCap="Round" EndLineCap="Round" StartLineCap="Round">
+                            <Pen.DashStyle>
+                                <DashStyle Dashes=""/>
+                            </Pen.DashStyle>
+                        </Pen>
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="M -47.6202 -164.321 H -60.1981 a 3.59371 3.59371 0 0 0 -3.59371 3.59371 v 25.1559 a 3.59371 3.59371 0 0 0 3.59371 3.59371 h 25.156 a 3.59371 3.59371 0 0 0 3.59371 -3.59371 v -12.578" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+            <DrawingGroup Transform="1.0,0.0,0.0,1.0,84.4863,262.465">
+                <GeometryDrawing>
+                    <GeometryDrawing.Pen>
+                        <Pen Brush="#ff000000" LineJoin="Round" Thickness="3.59371" DashCap="Round" EndLineCap="Round" StartLineCap="Round">
+                            <Pen.DashStyle>
+                                <DashStyle Dashes=""/>
+                            </Pen.DashStyle>
+                        </Pen>
+                    </GeometryDrawing.Pen>
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry Figures="m -36.1652 -164.995 a 3.8117 3.8117 0 0 1 5.39056 5.39056 l -16.195 16.1968 a 3.59371 3.59371 0 0 1 -1.53272 0.90741 l -5.16236 1.50936 a 0.898427 0.898427 0 0 1 -1.11405 -1.11405 l 1.50936 -5.16236 a 3.59371 3.59371 0 0 1 0.909209 -1.53092 z" FillRule="Nonzero"/>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingGroup>
+    </DrawingGroup>
+    <DrawingBrush Stretch="Uniform" Drawing="{StaticResource ModifyIcon}" x:Key="db_ModifyIcon"/>
+</ResourceDictionary>
