@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using System.Windows.Shell;
 using ActivAndZen.Components;
@@ -22,7 +21,7 @@ public partial class MainWindow : Window
     public ToolsHeader ToolsHeader;
     public SideNavigation SideNavigation;
     public Popups.Search ?PopupSearch;
-    public Popups.NewEmployee ?PopupNewClient;
+    public Popups.NewClient ?PopupNewClient;
     public Popups.NewEmployee ?PopupNewEmployee;
     public TextBlock MainContent = new TextBlock {
          Background = Brushes.Honeydew,
@@ -36,13 +35,13 @@ public partial class MainWindow : Window
 
     private readonly Grid m_rootGrid;
     private List<Key> KeysDown;
-    private PopupEnum _activePopup;
+    private Popup ?_activePopup;
 
     public MainWindow() {
-        _activePopup = PopupEnum.UNSET;
         WinMargin = 3;
         HeaderHeight = 40;
         BackgroundColor = Utils.RGBA("#f0edea");
+        BackgroundColor.Freeze();
         this.Background = BackgroundColor;
 
         WindowStartupLocation = WindowStartupLocation.CenterScreen;
@@ -108,12 +107,19 @@ public partial class MainWindow : Window
         this.InvalidateVisual();
     }
 
+    protected override void OnContentRendered(EventArgs e) {
+        base.OnContentRendered(e);
+        this.PopupSearch = new();
+        this.PopupNewEmployee = new();
+        this.PopupNewClient = new();
+    }
+
     protected override void OnKeyDown(KeyEventArgs e) {
         base.OnKeyDown(e);
 
         switch (e.Key) {
             case Key.Escape:
-                if (this.KeysDown.Count > 0) this.KeysDown.Clear();
+                // if (this.KeysDown.Count > 0) this.KeysDown.Clear();
                 if (TextBoxIsFocus) {
                     this.UnvalidButton.Focus();
                     TextBoxIsFocus = false;
@@ -143,31 +149,22 @@ public partial class MainWindow : Window
         }
     }
 
-    public PopupEnum ActivePopup {
+    public Popup ?ActivePopup {
         get => _activePopup;
-        set {
+        set 
+        {
+            // short-circuit si le popup demandé est le meme que celui déja présent
             if (value == _activePopup) return;
             // On dois désactiver le popup actuel d'abord
-            switch(_activePopup) {
-                case PopupEnum.SEARCH:          
-                    if (this.PopupSearch != null) this.PopupSearch.IsOpen = false; break;
-                case PopupEnum.NEW_EMPLOYEE:    
-                    if (this.PopupNewEmployee != null) this.PopupNewEmployee.IsOpen = false; break;
-                case PopupEnum.NEW_CLIENT:      
-                    if (this.PopupNewClient != null) this.PopupNewClient.IsOpen = false; break;
-            }
-            // Puis on active le popup demandé
-            switch (value) {
-                case PopupEnum.SEARCH:
-                    if (this.PopupSearch == null) this.PopupSearch = new();
-                    this.PopupSearch.IsOpen = true; 
-                    break;
-                // case PopupEnum.NEW_EMPLOYEE:    this.PopupNewEmployee.IsOpen = true; break;
-                // case PopupEnum.NEW_CLIENT:      this.PopupNewClient.IsOpen = true; break;
-            }
+            if (_activePopup != null ) _activePopup.IsOpen = false;
 
+            // On peux maintenant changer la valeur de _activPopup
             _activePopup = value;
-            // InvalidateVisual();
+
+            if (_activePopup == null) return;
+            
+            // Puis on active le popup demandé
+            _activePopup.IsOpen = true;
         }
     }
 

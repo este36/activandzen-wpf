@@ -21,11 +21,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Page Include="App.xaml"/>
+		<Page Include="App.xaml" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="EntityFramework" Version="6.5.1" />
+	  <!-- <PackageReference Include="EntityFramework" Version="6.5.1" /> -->
 	  <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.1" />
 	</ItemGroup>
 </Project>

@@ -298,6 +298,13 @@ public class TransparantTextBox : TextBox
         MainWindow.TextBoxIsFocus = true;
         base.OnGotFocus(e);
     }
+
+    protected override void OnKeyDown(KeyEventArgs e) {
+        // base.OnKeyDown(e);
+        switch (e.Key) {
+            case Key.Tab: e.Handled = true; break;
+        }
+    }
 }
 
 public class SearchBarText : TransparantTextBox
@@ -311,17 +318,15 @@ public class SearchBarText : TransparantTextBox
         if (this.Text != Placeholder) {
             if (this.Text.Length == 0) {
                 App.Window.Header.SearchBar.ResetButton.Width = 0;
-                App.Window.ActivePopup = PopupEnum.UNSET;
+                App.Window.ActivePopup = null;
             } else {
                 App.Window.Header.SearchBar.ResetButton.Width = 20;
-                App.Window.ActivePopup = PopupEnum.SEARCH;
+                App.Window.ActivePopup = App.Window.PopupSearch;
             }
         } else {
             App.Window.Header.SearchBar.ResetButton.Width = 0;
-            App.Window.ActivePopup = PopupEnum.UNSET;
+            App.Window.ActivePopup = null;
         }
-
-        
     }
 
     protected override void OnGotFocus(RoutedEventArgs e) {
@@ -329,7 +334,7 @@ public class SearchBarText : TransparantTextBox
         if (this.Text == Placeholder) {
             this.Text = "";
         } else if (this.Text != "") {
-            App.Window.ActivePopup = PopupEnum.SEARCH;
+            App.Window.ActivePopup = App.Window.PopupSearch;
         }
 
         App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.HoverBgColor;
@@ -349,7 +354,7 @@ public class SearchBarText : TransparantTextBox
             ) {
             App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.BackgroundColor;
             if (this.Text == "") this.Text = Placeholder;
-            App.Window.ActivePopup = PopupEnum.UNSET;
+            App.Window.ActivePopup = null;
         }
     }
 }
@@ -374,7 +379,9 @@ public class SearchBarResetButton : Container
             App.Window.Header.SearchBar.TextArea.Focus();
             App.Window.Header.SearchBar.TextArea.Text = "";
         });
+
     }
+
 
     protected override void OnMouseEnter(MouseEventArgs e){
         base.OnMouseEnter(e);
@@ -492,7 +499,28 @@ public class ToolsButton : Container
 
 public class ToolsHeader : Border
 {
+    public ToolsButton NewEmployeeButton;
+    public ToolsButton NewClientButton;
+    public ToolsButton ImportDataButton;
+
     public ToolsHeader() {
+        NewEmployeeButton = new ToolsButton(24, App.Icons.Person, false) {
+            ToolTip = new CustomTooltip("Ajouter un employé"), 
+            Cursor = Cursors.Hand
+        };
+        NewEmployeeButton.MouseUp += MouseTracker.DefineClick(() => App.Window.ActivePopup = App.Window.PopupNewEmployee);
+
+        NewClientButton = new ToolsButton(24, App.Icons.Building, false) {
+            ToolTip = new CustomTooltip("Ajouter un client"),
+            Cursor = Cursors.Hand
+        };
+        NewClientButton.MouseUp += MouseTracker.DefineClick(() => App.Window.ActivePopup = App.Window.PopupNewClient);
+
+        ImportDataButton = new ToolsButton(24, App.Icons.File, false) {
+            ToolTip = new CustomTooltip("Importer des données..."), 
+            Cursor = Cursors.Hand
+        };
+
         double b = 0.5;
         BorderThickness = new(0,b,0,b);
         CornerRadius = new(0);
@@ -506,9 +534,9 @@ public class ToolsHeader : Border
                 new ToolsButton(16, App.Icons.ArrowToRight, true),
                 new ToolsButton(16, App.Icons.Refresh, true),
                 new Separator(),
-                new ToolsButton(24, App.Icons.Person, false) {ToolTip = new CustomTooltip("Ajouter un employé"), Cursor = Cursors.Hand},
-                new ToolsButton(24, App.Icons.Building, false) {ToolTip = new CustomTooltip("Ajouter un client"), Cursor = Cursors.Hand},
-                new ToolsButton(24, App.Icons.File, false) {ToolTip = new CustomTooltip("Importer des données..."), Cursor = Cursors.Hand},
+                NewEmployeeButton,
+                NewClientButton,
+                ImportDataButton,
             },
             Margin = new(2,0,0,0)
         };

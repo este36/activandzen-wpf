@@ -66,7 +66,7 @@ public static class MouseTracker
         if (e.OriginalSource is UIElement ui) {
             LastClickDown.UIElement = ui;
             // ui.Focus();
-             // MessageBox.Show(ui.ToString());
+            // MessageBox.Show(ui.ToString());
         } else if (e.OriginalSource is System.Windows.Documents.Paragraph p) {
             LastClickDown.Paragraph = p;
             LastClickDown.UIElement = null;

@@ -7,27 +7,19 @@ namespace ActivAndZen.Model;
 
 public static class Model
 {
-    public static string ?Settings;
+    private static readonly string Settings = "Data Source=aaz.db";
 
     public static List<T> Ask<T>(string query, Action<List<T>, SqliteDataReader> getline)
     {
-        if (Settings == null)
-            Settings = "Data Source=aaz.db";
-
         List<T> values = new List<T>();
         
-        try
-        {
-            using (SqliteConnection connection = new SqliteConnection(Settings))
-            {
+        try {
+            using (SqliteConnection connection = new SqliteConnection(Settings)) {
                 connection.Open();
 
-                using (SqliteCommand cmd = new SqliteCommand(query, connection))
-                {
-                    using (SqliteDataReader dataReader = cmd.ExecuteReader())
-                    {
-                        while (dataReader.Read())
-                        {
+                using (SqliteCommand cmd = new SqliteCommand(query, connection)) {
+                    using (SqliteDataReader dataReader = cmd.ExecuteReader()) {
+                        while (dataReader.Read()) {
                             getline(values, dataReader);
                         }
                     }
@@ -35,13 +27,11 @@ public static class Model
             }
             return values;
         }
-        catch(SqliteException sqlerr)
-        {
+        catch(SqliteException sqlerr) {
             MessageBox.Show($"SQLite Error: {sqlerr.Message}");
             return new List<T>();
         }
-        catch(Exception err)
-        {
+        catch(Exception err) {
             MessageBox.Show($"General Error: {err.Message}");
             return new List<T>();
         }
