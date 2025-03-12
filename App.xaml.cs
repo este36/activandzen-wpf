@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.Data.Sqlite;
+using System.IO;
 
 namespace ActivAndZen;
 
@@ -17,6 +19,21 @@ public partial class App : Application
     public static MainWindow Window = new MainWindow();
 
     protected override void OnStartup(StartupEventArgs e) {
+        // Init Database if Not Exist
+        if (!File.Exists(Model.Settings.DatabaseFile)) {
+            using (var connection = new SqliteConnection($"Data Source={Model.Settings.DatabaseFile}"))
+            {
+                connection.Open();
+                string script = File.ReadAllText(Model.Settings.SqlFile);
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = script;
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+
         base.OnStartup(e);
         IsInit = true;
         Window.Show();

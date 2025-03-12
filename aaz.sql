@@ -3,29 +3,25 @@ PRAGMA foreign_keys = ON;
 -- Création de la table clients
 CREATE TABLE clients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
     is_active INTEGER NOT NULL DEFAULT 1,
-	employees TEXT DEFAULT '{}'
+    name TEXT NOT NULL
 );
 
 -- Création de la table employees
 CREATE TABLE employees (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    is_active INTEGER NOT NULL DEFAULT 1,
     client_id INTEGER NOT NULL,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT,
     phone TEXT,
     special_notes TEXT,
-    is_active INTEGER NOT NULL DEFAULT 1,
-	payed_slots TEXT DEFAULT '[]',
-	past_slots TEXT DEFAULT '[]',
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
 
 -- Création de la table registered_payments avec une clé étrangère vers la table clients
 CREATE TABLE payed_slots (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_id INTEGER NOT NULL,
     employe_id INTEGER NOT NULL,
     payment_date DATE NOT NULL,
@@ -36,10 +32,9 @@ CREATE TABLE payed_slots (
 
 -- Création de la table past_slots avec une clé étrangère vers la table clients
 CREATE TABLE past_slots (
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
     client_id INTEGER NOT NULL,
     employe_id INTEGER NOT NULL,
-    slot_date DATE NOT NULL,
+    slot_date INTEGER NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE,
     FOREIGN KEY (employe_id) REFERENCES employees(id) ON DELETE CASCADE
 );
@@ -47,7 +42,8 @@ CREATE TABLE past_slots (
 -- Insertion des données dans la table clients
 INSERT INTO clients (name) VALUES 
     ('Hitachi'),
-    ('Rolex');
+    ('Rolex'),
+	('Macdo');
 
 -- Insertion des données dans la table employees
 INSERT INTO employees (client_id, first_name, last_name, email, phone, special_notes) VALUES  

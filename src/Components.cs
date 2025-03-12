@@ -322,6 +322,7 @@ public class SearchBarText : TransparantTextBox
             } else {
                 App.Window.Header.SearchBar.ResetButton.Width = 20;
                 App.Window.ActivePopup = App.Window.PopupSearch;
+                App.Window.PopupSearch?.BuildResultList(this.Text);
             }
         } else {
             App.Window.Header.SearchBar.ResetButton.Width = 0;
@@ -335,6 +336,8 @@ public class SearchBarText : TransparantTextBox
             this.Text = "";
         } else if (this.Text != "") {
             App.Window.ActivePopup = App.Window.PopupSearch;
+            
+            App.Window.PopupSearch?.BuildResultList(this.Text);
         }
 
         App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.HoverBgColor;

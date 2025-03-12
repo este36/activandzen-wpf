@@ -6,6 +6,8 @@ using ActivAndZen.Components;
 using ActivAndZen.Popups;
 using System.Windows.Input;
 
+using System.Text;
+
 namespace ActivAndZen;
 
 public partial class MainWindow : Window

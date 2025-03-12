@@ -1,9 +1,8 @@
 using System.Windows;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Documents;
-// using System.Windows.Controls.Primitives;
-using System.Windows.Media.Animation;
 using ActivAndZen.Components;
 
 namespace ActivAndZen.Popups;
@@ -151,10 +150,6 @@ public class Popup
 		}
 	}
 
-	/// <summary>
-	/// Met à jour l’adorner en fonction des propriétés PlacementTarget et Child.
-	/// Si l’adorner était ouvert, il est fermé, recréé et réouvert.
-	/// </summary>
 	private void UpdateAdorner()
 	{
 		bool wasOpen = _adorner?.IsOpen ?? false;
@@ -178,44 +173,100 @@ public class Popup
 
 public class Search : Popup
 {
-	private class ItemCard : StackPanel
-	{
-		
-	}
+	StackPanel Results;
 	
     public Search () {
         PlacementTarget = App.Window.Header.SearchBar;
         IsOpen = false;
-
+        Results = new();
     	this.Child = new Border {
 			Width = App.Window.Header.SearchBar.TotalWidth,
 			Background = Brushes.WhiteSmoke,
 			CornerRadius = new(8),
-			BorderThickness = new(0.5),
-			BorderBrush = Brushes.LightGray,
-			Padding = new(10),
-			Child = new StackPanel {
-				Children = {
-					new StackPanel {
-						Orientation = Orientation.Horizontal,
-						Children = {
-							new TextBlock {
-								Text = "it"
-							},
-							new TextBlock {
-								Text = "e",
-								FontWeight = FontWeights.Bold
-							},
-							new TextBlock {
-								Text = "m"
-							}							
-						}
-						
-					}
-				}
-			}
+			BorderThickness = new(0),
+			BorderBrush = Brushes.Gray,
+			Padding = new(0,6,0,6),
+			Child = Results
 		};
     }
+
+    public void BuildResultList(string input) {
+		var employees_query = new Model.Employees();
+
+		employees_query.SelectPossibles(input);
+
+		Results.Children.Clear();
+		List<Model.Employee> employees = [];
+
+		for (int i = 0; i < employees_query.Count; i++ ) {
+			employees.Add(employees_query[i]);
+		}
+
+		var sortedEmployees = employees.OrderBy(e => {
+			string fullName = $"{e.FirstName} {e.LastName}";
+			return fullName.IndexOf(input, StringComparison.CurrentCultureIgnoreCase);
+		}).ToList();
+
+		for (int i = 0; i < sortedEmployees.Count && i < 5; i++) {
+			string clientName = new Model.Clients().GetNameFromId(sortedEmployees[i].ClientId);
+			string fullName = $"{sortedEmployees[i].FirstName} {sortedEmployees[i].LastName}";
+
+			int substr_index = fullName.IndexOf(input, StringComparison.CurrentCultureIgnoreCase);
+
+			ResultElement resultElement = new(sortedEmployees[i].Id, clientName);
+
+			if (substr_index == 0) {
+				// dans ce cas le bold est juste au début, juste besoin de deux append
+				resultElement.AppendToName(true, fullName.Substring(0, input.Length));
+				if (input.Length < fullName.Length) resultElement.AppendToName(false, fullName.Substring(input.Length));
+			} else {
+				// un non-bold , un bold, puis un non-bold
+				int first_occ_index = fullName.IndexOf(input, StringComparison.CurrentCultureIgnoreCase);
+				resultElement.AppendToName(false, fullName.Substring(0, first_occ_index));
+				resultElement.AppendToName(true, fullName.Substring(first_occ_index, input.Length));
+				if (input.Length + first_occ_index < fullName.Length) resultElement.AppendToName(false, fullName.Substring(first_occ_index + input.Length));
+			}
+
+			Results.Children.Add(resultElement);
+		}
+    }
+
+    private class ResultElement : Container
+	{
+		private int _employeeId;
+		private StackPanel _employeeName;
+		public ResultElement(int id, string clientName)
+		{
+			_employeeName = new() {
+				Orientation = Orientation.Horizontal
+			};
+			_employeeId = id;
+
+			HoverBgColor = Brushes.White;
+			CornerRadius = new(4);
+			Padding = new(6);
+			Margin = new(6,2,6,2);
+
+			Child = new GridExt {
+				Columns = new([
+					new(new(1, GridUnitType.Star), _employeeName),
+					new(new(40, GridUnitType.Pixel), new TextBlock {
+						VerticalAlignment = VerticalAlignment.Center,
+						Text = clientName,
+						Foreground = Brushes.Gray
+					})
+				])
+			};
+		}
+
+		public void AppendToName(bool isBold, string str) 
+		{
+			this._employeeName.Children.Add( new TextBlock {
+				Text = str,
+				FontWeight = isBold ? FontWeights.Bold : FontWeights.Normal
+			});
+		}
+	}
 }
 
 public class NewClient : Popup
