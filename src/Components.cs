@@ -29,8 +29,6 @@ abstract public class Container : Border
     private Brush ?_hoverBgColor;
     private Brush ?_borderColor;
     private Brush ?_hoverBorderColor;
-    private double ?_defaultHeight;
-    private double ?_defaultWidth;
     public bool IsDisable {get;set;}
 
     public Container() {
@@ -77,19 +75,6 @@ abstract public class Container : Border
         }
     }
 
-    public double DefaultHeight {
-        set {
-            _defaultHeight = value;
-            this.Height = value;
-        }
-    }
-    public double DefaultWidth {
-        set {
-            _defaultWidth = value;
-            this.Width = value;
-        }
-    }
-
     protected override void OnMouseEnter(MouseEventArgs e) {
         base.OnMouseEnter(e);
         if (!this.IsDisable) {
@@ -106,9 +91,6 @@ abstract public class Container : Border
             
             if (_borderColor != null) this.BorderBrush = _borderColor;
             else this.BorderBrush = Brushes.Transparent;
-
-            if (_defaultHeight != null) this.Height = (double)_defaultHeight;
-            if (_defaultWidth != null) this.Height = (double)_defaultWidth;
         }
     }
 }

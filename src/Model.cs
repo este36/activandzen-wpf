@@ -1,8 +1,9 @@
-using System.Windows;
+using System;
+using System.Text;
+using System.Runtime.InteropServices;
 using Microsoft.Data.Sqlite;
 
 namespace ActivAndZen.Model;
-
 
 public static class Settings
 {
@@ -10,239 +11,226 @@ public static class Settings
     public static readonly string SqlFile = "aaz.sql";
 }
 
-public struct Client
+public class Clients
 {
-    public int Id;
-    public int IsActive;
-    public string Name;
+    public int Count = 0;
+    public List<int> id = new();
+    public List<bool> is_active = new();
+    public List<string> name = new();
 }
 
-public struct Employee
+public class Employee
 {
-    public int Id;
-    public int IsActive;
-    public int ClientId;
-    public string FirstName;
-    public string LastName;
-    public string Email;
-    public string Phone;
-    public string SpecialNote;
+    public int id = 0;
+    public bool is_active = false;
+    public int client_id = 0;
+    public string first_name = String.Empty;
+    public string last_name = String.Empty;
+    public string email = String.Empty;
+    public string phone = String.Empty;
+    public string special_notes = String.Empty;
 }
 
-public struct PastSlots
+public class Employees
 {
-    public DateTime dateTime;
-}
+    public int Count = 0;
+    public List<int> id = new();
+    public List<bool> is_active = new();
+    public List<int> client_id = new();
+    public List<string> first_name = new();
+    public List<string> last_name = new();
 
-public abstract class TableQueryBase
-{
-    protected string TableName;
-
-    public TableQueryBase(string tableName)
+    /// <summary>
+    /// Sort by first occurence of filter in the full name.
+    /// </summary>
+    public void SortOrderByFilter(string filter)
     {
-        TableName = tableName;
-    }
+        if (string.IsNullOrEmpty(filter) || this.Count == 0) return;
 
-    protected int _count;
-    public int Count
-    {
-        get => _count;
-    }
+        int[] indices = new int[this.Count];
+        int[] sortKeys = new int[this.Count];
 
-    public int Exec(bool is_SELECT, string query, params SqliteParameter [] parameters) 
-    {
-        try {
-            using (SqliteConnection connection = new SqliteConnection($"Data Source={Settings.DatabaseFile}")) 
+        for (int i = 0; i < this.Count; i++)
+        {
+            string full_name = $"{this.first_name[i]} {this.last_name[i]}";
+            sortKeys[i] = full_name.IndexOf(filter, StringComparison.CurrentCultureIgnoreCase);
+            indices[i] = i;
+        }
+
+        Array.Sort(sortKeys, indices);
+
+        Span<int> idSpan = CollectionsMarshal.AsSpan(id);
+        Span<bool> isActiveSpan = CollectionsMarshal.AsSpan(is_active);
+        Span<int> clientIdSpan = CollectionsMarshal.AsSpan(client_id);
+        Span<string> firstNameSpan = CollectionsMarshal.AsSpan(first_name);
+        Span<string> lastNameSpan = CollectionsMarshal.AsSpan(last_name);
+
+        bool[] visited = new bool[this.Count];
+
+        for (int i = 0; i < this.Count; i++)
+        {
+            if (visited[i]) continue;
+
+            int current = i;
+            var tempId = idSpan[i];
+            var tempActive = isActiveSpan[i];
+            var tempClient = clientIdSpan[i];
+            var tempFirst = firstNameSpan[i];
+            var tempLast = lastNameSpan[i];
+
+            while (!visited[current])
             {
-                connection.Open();
+                int next = indices[current];
+                visited[current] = true;
 
-                using (SqliteCommand cmd = new SqliteCommand(query, connection)) 
+                if (next == i) break; // Fin de la boucle de permutation
+
+                idSpan[current] = idSpan[next];
+                isActiveSpan[current] = isActiveSpan[next];
+                clientIdSpan[current] = clientIdSpan[next];
+                firstNameSpan[current] = firstNameSpan[next];
+                lastNameSpan[current] = lastNameSpan[next];
+
+                current = next;
+            }
+
+            idSpan[current] = tempId;
+            isActiveSpan[current] = tempActive;
+            clientIdSpan[current] = tempClient;
+            firstNameSpan[current] = tempFirst;
+            lastNameSpan[current] = tempLast;
+        }
+    }
+}
+
+public static class Queries
+{
+
+    /// <summary>
+    /// Get basic infos about every employees
+    /// </summary>
+    public static Employees GetAllEmployees()
+    {
+        string query = "SELECT id, is_active, client_id, first_name, last_name FROM employees";
+        using (var connection = new SqliteConnection($"Data Source={Settings.DatabaseFile}"))
+        {
+            connection.Open();
+            using (var cmd = new SqliteCommand(query, connection))
+            using (var reader = cmd.ExecuteReader())
+            {
+                Employees result = new();
+                while (reader.Read()) 
                 {
-
-                    if (parameters != null && parameters.Length > 0) {
-                        cmd.Parameters.AddRange(parameters);
-                    }
-
-                    if (is_SELECT)
-                    {
-                        Clear();
-                        
-                        using (SqliteDataReader dataReader = cmd.ExecuteReader()) 
-                        {
-                            while (dataReader.Read()) {
-                                GetLine(dataReader);
-                                _count++;
-                            }
-                        }
-                        return 0;
-                    }
-
-                    return cmd.ExecuteNonQuery();
+                    result.id.Add(reader.GetInt32(0));
+                    result.is_active.Add(reader.GetBoolean(1));
+                    result.client_id.Add(reader.GetInt32(2));
+                    result.first_name.Add(reader.GetString(3));
+                    result.last_name.Add(reader.GetString(4));
                 }
+                result.Count = result.id.Count;
+                return result;
             }
         }
-        catch(SqliteException sqlerr) {
-            MessageBox.Show($"SQLite Error: {sqlerr.Message}");
-            return -1;
-        }
-        catch(Exception err) {
-            MessageBox.Show($"General Error: {err.Message}");
-            return -1;
-        } 
     }
 
-    public void SelectAll()
+    public static Employees GetPossibleEmployees(string filter)
     {
-        OnSelectAll();
-        Exec(true, $"SELECT * FROM {TableName};");
-    }
+        if (string.IsNullOrWhiteSpace(filter)) return new Employees();
 
-    protected abstract void GetLine(SqliteDataReader dataReader);
-    protected abstract void Clear();
+        filter = filter.ToLower();
 
-    protected abstract void OnSelectAll();
-}
+        string first = $"%{filter}%";
+        string last = $"%{filter}%";
 
-// -------------------------------------
-// Classes Generated with Powershell
-// --------------------------------------
+        int space_index = filter.IndexOf(' ');
 
-public class Clients : TableQueryBase
-{
-    private List<int>? Ids;
-    private List<int>? IsActives;
-    private List<string>? Names;
+        StringBuilder query = new("SELECT id, is_active, client_id, first_name, last_name FROM employees WHERE LOWER(first_name)");
 
-    public Clients() : base("clients") {}
+        bool should_cmp_fullName = true;
 
-
-    public string GetNameFromId(int id)
-    {
-        Names = new();
-        Exec(true, $"SELECT * FROM {TableName} WHERE id = {id}");
-        return Names[0];
-    }
-
-    protected override void OnSelectAll()
-    {
-        Ids = new();
-        IsActives = new();
-        Names = new();
-    }
-
-    public ActivAndZen.Model.Client this[int index]
-    {
-        get
-        {
-            if (index > _count || index < 0)
-                throw new IndexOutOfRangeException("Index invalide.");
-            return new ActivAndZen.Model.Client {
-                Id = Ids != null ? Ids[index] : -1,
-                IsActive = IsActives != null ? IsActives[index] : -1,
-                Name = Names != null ? Names[index] : ""
-            };
-        }
-    }
-
-    protected override void GetLine(SqliteDataReader dataReader)
-    {
-        if (Ids != null) Ids.Add(dataReader.GetInt32(0));
-        if (IsActives != null) IsActives.Add(dataReader.GetInt32(1));
-        if (Names != null) Names.Add(dataReader.GetString(2));
-    }
-
-    protected override void Clear()
-    {
-        if (Ids != null) Ids.Clear();
-        if (IsActives != null) IsActives.Clear();
-        if (Names != null) Names.Clear();
-    }
-}
-
-public class Employees : TableQueryBase
-{
-    private List<int>? Ids;
-    private List<int>? IsActives;
-    private List<int>? ClientIds;
-    private List<string>? FirstNames;
-    private List<string>? LastNames;
-    private List<string>? Emails;
-    private List<string>? Phones;
-    private List<string>? SpecialNotes;
-
-    public Employees() : base("employees") {}
-
-    public void SelectPossibles(string substr) {
-        Ids = new();
-        IsActives = new();
-        ClientIds = new();
-        FirstNames = new();
-        LastNames = new();
-        
-        string firstName = substr;
-        string lastName = substr;
-
-        int space_index = substr.IndexOf(' ');
         if (space_index > 0) {
-            firstName = substr.Substring(0, space_index);
-            lastName = substr.Substring(space_index);
+            first = filter.Substring(0, space_index).Trim();
+            last = filter.Substring(space_index + 1).Trim();
+
+            if (last.Length == 0) {
+                should_cmp_fullName = false;
+                query.Append(" = @first");
+            } else {
+                last += "%";
+                query.Append(" = @first AND LOWER(last_name) LIKE @last");
+            }
+        } else {
+            query.Append(" LIKE @first OR LOWER(last_name) LIKE @last");
         }
+        
+        query.Append(';');
 
-        Exec(true, $"SELECT * FROM {TableName} WHERE LOWER(first_name) LIKE '%{firstName}%' OR LOWER(last_name) LIKE '%{lastName}%'");
-    }
+        using var connection = new SqliteConnection($"Data Source={Settings.DatabaseFile}");
+        connection.Open();
 
-    protected override void OnSelectAll() 
-    {
-        Ids = new();
-        IsActives = new();
-        ClientIds = new();
-        FirstNames = new();
-        LastNames = new();
-        Emails = new();
-        Phones = new();
-        SpecialNotes = new();
-    }
+        using var cmd = new SqliteCommand(query.ToString(), connection);
+        cmd.Parameters.AddWithValue("@first", first);
+        if (should_cmp_fullName) cmd.Parameters.AddWithValue("@last", last);
 
-    public ActivAndZen.Model.Employee this[int index]
-    {
-        get
+        using var reader = cmd.ExecuteReader();
+
+        Employees result = new();
+        while (reader.Read()) 
         {
-            if (index > _count || index < 0)
-                throw new IndexOutOfRangeException("Index invalide.");
-            return new ActivAndZen.Model.Employee {
-                Id = Ids != null ? Ids[index] : -1,
-                IsActive = IsActives != null ? IsActives[index] : -1,
-                ClientId = ClientIds != null ? ClientIds[index] : -1,
-                FirstName = FirstNames != null ? FirstNames[index] : "",
-                LastName = LastNames != null ? LastNames[index] : "",
-                Email = Emails != null ? Emails[index] : "",
-                Phone = Phones != null ? Phones[index] : "",
-                SpecialNote = SpecialNotes != null ? SpecialNotes[index] : ""
-            };
+            result.id.Add(reader.GetInt32(0));
+            result.is_active.Add(reader.GetBoolean(1));
+            result.client_id.Add(reader.GetInt32(2));
+            result.first_name.Add(reader.GetString(3));
+            result.last_name.Add(reader.GetString(4));
+        }
+        result.Count = result.id.Count;
+
+        return result;
+    }
+
+
+    public static Employee GetEmployeeFromId(int id)
+    {
+        string query = $"SELECT * FROM employees WHERE id = {id}";
+        using (var connection = new SqliteConnection($"Data Source={Settings.DatabaseFile}"))
+        {
+            connection.Open();
+            using (var cmd = new SqliteCommand(query, connection))
+            using (var reader = cmd.ExecuteReader())
+            {
+                Employee result = new();
+                while (reader.Read()) 
+                {
+                    result.id = reader.GetInt32(0);
+                    result.is_active = reader.GetBoolean(1);
+                    result.client_id = reader.GetInt32(2);
+                    result.first_name = reader.GetString(3);
+                    result.last_name = reader.GetString(4);
+                    result.email = reader.GetString(5);
+                    result.phone = reader.GetString(6);
+                    result.special_notes = reader.GetString(7);
+                }
+                return result;
+            }
         }
     }
 
-    protected override void GetLine(SqliteDataReader dataReader)
+    public static string GetClientNameFromId(int client_id)
     {
-        if (Ids != null) Ids.Add(dataReader.GetInt32(0));
-        if (IsActives != null) IsActives.Add(dataReader.GetInt32(1));
-        if (ClientIds != null) ClientIds.Add(dataReader.GetInt32(2));
-        if (FirstNames != null) FirstNames.Add(dataReader.GetString(3));
-        if (LastNames != null) LastNames.Add(dataReader.GetString(4));
-        if (Emails != null) Emails.Add(dataReader.GetString(5));
-        if (Phones != null) Phones.Add(dataReader.GetString(6));
-        if (SpecialNotes != null) SpecialNotes.Add(dataReader.GetString(7));
-    }
-
-    protected override void Clear()
-    {
-        if (Ids != null) Ids.Clear();
-        if (IsActives != null) IsActives.Clear();
-        if (ClientIds != null) ClientIds.Clear();
-        if (FirstNames != null) FirstNames.Clear();
-        if (LastNames != null) LastNames.Clear();
-        if (Emails != null) Emails.Clear();
-        if (Phones != null) Phones.Clear();
-        if (SpecialNotes != null) SpecialNotes.Clear();
+        string query = $"SELECT name FROM clients WHERE id = {client_id}";
+        using (var connection = new SqliteConnection($"Data Source={Settings.DatabaseFile}"))
+        {
+            connection.Open();
+            using (var cmd = new SqliteCommand(query, connection))
+            using (var reader = cmd.ExecuteReader())
+            {
+                string result = "";
+                while (reader.Read()) 
+                {
+                    result = reader.GetString(0);
+                }
+                return result;
+            }
+        }
     }
 }

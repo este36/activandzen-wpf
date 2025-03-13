@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Documents;
+using ActivAndZen.Model;
 using ActivAndZen.Components;
 
 namespace ActivAndZen.Popups;
@@ -191,29 +192,26 @@ public class Search : Popup
     }
 
     public void BuildResultList(string input) {
-		var employees_query = new Model.Employees();
-
-		employees_query.SelectPossibles(input);
+        Employees employees_query = Queries.GetPossibleEmployees(input);
+        input.Trim();
 
 		Results.Children.Clear();
-		List<Model.Employee> employees = [];
-
-		for (int i = 0; i < employees_query.Count; i++ ) {
-			employees.Add(employees_query[i]);
+		if (employees_query.Count == 0) {
+			Results.Children.Add( new TextBlock {
+				Text = "Aucun résultat"
+			});
+			return;
 		}
 
-		var sortedEmployees = employees.OrderBy(e => {
-			string fullName = $"{e.FirstName} {e.LastName}";
-			return fullName.IndexOf(input, StringComparison.CurrentCultureIgnoreCase);
-		}).ToList();
+		employees_query.SortOrderByFilter(input);		
 
-		for (int i = 0; i < sortedEmployees.Count && i < 5; i++) {
-			string clientName = new Model.Clients().GetNameFromId(sortedEmployees[i].ClientId);
-			string fullName = $"{sortedEmployees[i].FirstName} {sortedEmployees[i].LastName}";
+		for (int i = 0; i < employees_query.Count && i < 5; i++) {
+			string clientName = Queries.GetClientNameFromId(employees_query.client_id[i]);
+			string fullName = $"{employees_query.first_name[i]} {employees_query.last_name[i]}";
 
 			int substr_index = fullName.IndexOf(input, StringComparison.CurrentCultureIgnoreCase);
 
-			ResultElement resultElement = new(sortedEmployees[i].Id, clientName);
+			ResultElement resultElement = new(employees_query.id[i], clientName);
 
 			if (substr_index == 0) {
 				// dans ce cas le bold est juste au début, juste besoin de deux append
@@ -245,17 +243,20 @@ public class Search : Popup
 			HoverBgColor = Brushes.White;
 			CornerRadius = new(4);
 			Padding = new(6);
-			Margin = new(6,2,6,2);
+			Margin = new(6,0,6,0);
 
-			Child = new GridExt {
-				Columns = new([
-					new(new(1, GridUnitType.Star), _employeeName),
-					new(new(40, GridUnitType.Pixel), new TextBlock {
+			Child = new StackPanel {
+				Orientation = Orientation.Horizontal,
+				Children = {
+					_employeeName,
+					new TextBlock {
+						Margin = new(8,0,0,0),
 						VerticalAlignment = VerticalAlignment.Center,
 						Text = clientName,
+						FontStyle = FontStyles.Italic,
 						Foreground = Brushes.Gray
-					})
-				])
+					}
+				}
 			};
 		}
 
