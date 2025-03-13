@@ -22,7 +22,7 @@ namespace ActivAndZen.Components;
 // SideNavigation
 
 
-abstract public class Container : Border
+public class Container : Border
 {
     private GridExt ?_mainGrid;
     private Brush ?_backgroundColor;
@@ -293,7 +293,7 @@ public class SearchBarText : TransparantTextBox
 {
     public static readonly string Placeholder = "Rechercher un(e) employé(e)";
 
-    protected override void OnTextChanged(TextChangedEventArgs e){
+    protected override async void OnTextChanged(TextChangedEventArgs e){
         base.OnTextChanged(e);
         if (!App.IsInit) return;
 
@@ -303,8 +303,8 @@ public class SearchBarText : TransparantTextBox
                 App.Window.ActivePopup = null;
             } else {
                 App.Window.Header.SearchBar.ResetButton.Width = 20;
+                await App.Window!.PopupSearch!.BuildResultList(this.Text);
                 App.Window.ActivePopup = App.Window.PopupSearch;
-                App.Window.PopupSearch?.BuildResultList(this.Text);
             }
         } else {
             App.Window.Header.SearchBar.ResetButton.Width = 0;
@@ -312,14 +312,13 @@ public class SearchBarText : TransparantTextBox
         }
     }
 
-    protected override void OnGotFocus(RoutedEventArgs e) {
+    protected override async void OnGotFocus(RoutedEventArgs e) {
         base.OnGotFocus(e);
         if (this.Text == Placeholder) {
             this.Text = "";
         } else if (this.Text != "") {
+            await App.Window!.PopupSearch!.BuildResultList(this.Text);
             App.Window.ActivePopup = App.Window.PopupSearch;
-            
-            App.Window.PopupSearch?.BuildResultList(this.Text);
         }
 
         App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.HoverBgColor;
@@ -361,8 +360,8 @@ public class SearchBarResetButton : Container
         this.Child = icon;
 
         this.MouseUp += MouseTracker.DefineClick(() => {
-            App.Window.Header.SearchBar.TextArea.Focus();
             App.Window.Header.SearchBar.TextArea.Text = "";
+            App.Window.Header.SearchBar.TextArea.Focus();
         });
 
     }
@@ -535,5 +534,20 @@ public class SideNavigation : GridExt
     public SideNavigation() {
         this.Width = 210;
         this.Background = Brushes.Chocolate;
+    }
+}
+
+
+public abstract class InputBase : Container
+{
+    public string KeyName;
+
+    public InputBase(string keyName)
+    {
+        KeyName = keyName;
+    }
+
+    private void Validate()
+    {
     }
 }

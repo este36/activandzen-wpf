@@ -158,15 +158,17 @@ public partial class MainWindow : Window
             // short-circuit si le popup demandé est le meme que celui déja présent
             if (value == _activePopup) return;
             // On dois désactiver le popup actuel d'abord
-            if (_activePopup != null ) _activePopup.IsOpen = false;
+            if (_activePopup != null ) {
+                _activePopup.IsOpen = false;
+            }
 
             // On peux maintenant changer la valeur de _activPopup
             _activePopup = value;
 
-            if (_activePopup == null) return;
-            
             // Puis on active le popup demandé
-            _activePopup.IsOpen = true;
+            if (_activePopup != null) {
+                _activePopup.IsOpen = true;    
+            }
         }
     }
 

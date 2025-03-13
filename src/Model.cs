@@ -5,6 +5,12 @@ using Microsoft.Data.Sqlite;
 
 namespace ActivAndZen.Model;
 
+// Queries
+// GetAllEmployees
+// GetPossibleEmployees
+// GetEmployeeFromId
+// GetClientNameFromId
+
 public static class Settings
 {
     public static readonly string DatabaseFile = "aaz.db";

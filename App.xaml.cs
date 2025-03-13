@@ -16,7 +16,7 @@ namespace ActivAndZen;
 public partial class App : Application
 {
     public static bool IsInit = false;
-    public static MainWindow Window = new MainWindow();
+    public static readonly MainWindow Window = new();
 
     protected override void OnStartup(StartupEventArgs e) {
         // Init Database if Not Exist

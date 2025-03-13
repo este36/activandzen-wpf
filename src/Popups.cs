@@ -3,6 +3,7 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Documents;
+using System.Threading.Tasks;
 using ActivAndZen.Model;
 using ActivAndZen.Components;
 
@@ -179,7 +180,15 @@ public class Search : Popup
     public Search () {
         PlacementTarget = App.Window.Header.SearchBar;
         IsOpen = false;
-        Results = new();
+        Results = new() {
+        	Children = {
+        		new TextBlock {
+        			Margin = new(6,0,6,0),
+        			Text = "Chargement...",
+        			Foreground = Brushes.Gray
+        		}
+        	}
+        };
     	this.Child = new Border {
 			Width = App.Window.Header.SearchBar.TotalWidth,
 			Background = Brushes.WhiteSmoke,
@@ -191,14 +200,20 @@ public class Search : Popup
 		};
     }
 
-    public void BuildResultList(string input) {
-        Employees employees_query = Queries.GetPossibleEmployees(input);
+    public async Task BuildResultList(string input) {
+    	 
+    	Results.Children.Clear();
+
+        Employees employees_query = await Task.Run(() => Queries.GetPossibleEmployees(input));
         input.Trim();
 
-		Results.Children.Clear();
+        Results.Children.Clear();
+
 		if (employees_query.Count == 0) {
 			Results.Children.Add( new TextBlock {
-				Text = "Aucun résultat"
+				Margin = new(6,0,6,0),
+				Text = "Aucun résultat",
+    			Foreground = Brushes.Gray
 			});
 			return;
 		}
@@ -269,6 +284,27 @@ public class Search : Popup
 		}
 	}
 }
+
+
+// public class Form : Popup
+// {
+// 	public Input[] Inputs;
+
+// 	public Form(int inputs_qty)
+// 	{
+// 		Inputs = new Input[inputs_qty];
+// 	}
+
+// 	protected class Submit : Container
+// 	{
+
+// 	}
+	
+// 	protected void AddInput(Input e)
+// 	{
+// 	}
+	
+// }
 
 public class NewClient : Popup
 {
