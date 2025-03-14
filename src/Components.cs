@@ -220,7 +220,8 @@ public class Container : Border
 
 public class CustomTooltip : ToolTip 
 {
-    public CustomTooltip(string text) {
+    public CustomTooltip(string text) 
+    {
         BorderThickness = new(0.8);
         BorderBrush = Brushes.LightGray;
         BorderBrush.Freeze();
@@ -238,13 +239,11 @@ public class IconGrid : Grid
     public double IconHeight;
     public double IconWidth;
 
-    public IconGrid(double width, double height, DrawingBrush iconRef) {
-        HorizontalAlignment = HorizontalAlignment.Stretch;
-        VerticalAlignment = VerticalAlignment.Stretch;
+    public IconGrid(double width, double height, DrawingBrush iconRef) 
+    {
         IconHeight = height;
         IconWidth = width;
         Icon = iconRef;
-        // Icon.Freeze();
 
         Children.Add(new Grid {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -255,20 +254,20 @@ public class IconGrid : Grid
         });
     }
 
-        public void SetIcon(DrawingBrush iconRef) {
+    public void SetIcon(DrawingBrush iconRef) 
+    {
         this.Icon = iconRef; // (DrawingBrush)Application.Current.Resources[iconRef];
         // this.Icon.Freeze();
         if (this.Children[0] is Grid g) {
             g.Background = this.Icon;
         }
     }
-
-    
 }
 
 public class Separator : StackPanel 
 {
-    public Separator() {
+    public Separator() 
+    {
          VerticalAlignment = VerticalAlignment.Stretch;
          Width = 0.8;
          Background = Brushes.LightGray;
@@ -282,7 +281,8 @@ public partial class WindowHandlerButton : Container
     public IconGrid Icon;
     private bool IsWinClose;
 
-    public WindowHandlerButton(DrawingBrush iconRef,Brush hoverColor, Action btnAction, bool isWinClose) {
+    public WindowHandlerButton(DrawingBrush iconRef,Brush hoverColor, Action btnAction, bool isWinClose) 
+    {
         IsWinClose = isWinClose;
         Width = 50;
         Height = MainWindow.HeaderHeight;
@@ -303,7 +303,8 @@ public partial class WindowHandlerButton : Container
         MouseLeftButtonUp += MouseTracker.DefineClick(btnAction);
     }
 
-    protected override HitTestResult ?HitTestCore(PointHitTestParameters h) {
+    protected override HitTestResult ?HitTestCore(PointHitTestParameters h) 
+    {
         double borderZone = MainWindow.WinMargin;
         Point hitPoint = h.HitPoint;
         bool isInResizeZone;
@@ -324,7 +325,8 @@ public partial class WindowHeader : Grid
     public WindowHandlerButton WinFullScreenToggle;
     public SearchBar SearchBar;
 
-    public WindowHeader() {
+    public WindowHeader() 
+    {
         Background = MainWindow.BackgroundColor;
         Background?.Freeze();
 
@@ -426,11 +428,16 @@ public class TransparantTextBox : TextBox
     protected override void OnGotFocus(RoutedEventArgs e) {
         base.OnGotFocus(e);
         MainWindow.TextBoxIsFocus = true;
+        UnSetPlaceholder();
+    }
 
+    protected override void OnLostFocus(RoutedEventArgs e) {
+        base.OnLostFocus(e);
+        SetPlaceholder();
     }
 
     protected override void OnKeyDown(KeyEventArgs e) {
-        // base.OnKeyDown(e);
+        base.OnKeyDown(e);
         switch (e.Key) {
             case Key.Tab: e.Handled = true; break;
         }
@@ -450,24 +457,23 @@ public class SearchBarText : TransparantTextBox
 
         if (this.Text != Placeholder) {
             if (this.Text.Length == 0) {
-                App.Window.Header.SearchBar.ResetButton.Width = 0;
+                App.Window.Header.SearchBar.ResetButton.Visibility = Visibility.Collapsed;
                 App.Window.ActivePopup = null;
             } else {
-                App.Window.Header.SearchBar.ResetButton.Width = 20;
+                App.Window.Header.SearchBar.ResetButton.Visibility = Visibility.Visible;
                 await App.Window!.PopupSearch!.BuildResultList(this.Text);
                 App.Window.ActivePopup = App.Window.PopupSearch;
             }
         } else {
-            App.Window.Header.SearchBar.ResetButton.Width = 0;
+            App.Window.Header.SearchBar.ResetButton.Visibility = Visibility.Collapsed;
             App.Window.ActivePopup = null;
         }
     }
 
     protected override async void OnGotFocus(RoutedEventArgs e) {
         base.OnGotFocus(e);
-        if (this.Text == Placeholder) {
-            this.Text = "";
-        } else if (this.Text != "") {
+
+        if (!IsTextPlaceholder && this.Text.Length > 0) {
             await App.Window!.PopupSearch!.BuildResultList(this.Text);
             App.Window.ActivePopup = App.Window.PopupSearch;
         }
@@ -476,8 +482,6 @@ public class SearchBarText : TransparantTextBox
     }
 
     protected override void OnLostFocus(RoutedEventArgs e) {
-        base.OnLostFocus(e);
-
         if (    MouseTracker.LastClickDown.UIElement != App.Window.Header.SearchBar 
             &&  MouseTracker.LastClickDown.UIElement != App.Window.Header.SearchBar.ResetButton
             &&  App.Window.Header.SearchBar.ResetButton.Child is Grid resetButtonGrid
@@ -487,51 +491,19 @@ public class SearchBarText : TransparantTextBox
             &&  g.Children[0] is Grid c
             &&  MouseTracker.LastClickDown.UIElement != c
             ) {
+            base.OnLostFocus(e);
             App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.BackgroundColor;
-            if (this.Text == "") this.Text = Placeholder;
             App.Window.ActivePopup = null;
         }
     }
 }
 
-public class SearchBarResetButton : Container 
-{
-    public SearchBarResetButton() {
-        double m = 2.5;
-        this.Margin = new(m,m*1.5,m,m*1.5);
-        this.HoverBgColor = Brushes.LightGray;
-
-        // this.BorderThickness = new(0.5);
-        // this.HoverBorderColor = Brushes.LightGray;
-        this.CornerRadius = new(2);
-
-        double iconSize = 8.5;
-        IconGrid icon = new IconGrid(iconSize,iconSize, App.Icons.Cross);
-        icon.Icon.Freeze();
-        this.Child = icon;
-
-        this.MouseUp += MouseTracker.DefineClick(() => {
-            App.Window.Header.SearchBar.TextArea.Text = "";
-            App.Window.Header.SearchBar.TextArea.Focus();
-        });
-
-    }
-
-
-    protected override void OnMouseEnter(MouseEventArgs e){
-        base.OnMouseEnter(e);
-        this.Cursor = Cursors.Hand;
-    }
-
-    protected override void OnMouseLeave(MouseEventArgs e) {
-        base.OnMouseLeave(e);
-        this.Cursor = Cursors.IBeam;
-    }
-}
-
 public class TextInput : Container
 {
-    public TextInput()
+    public TransparantTextBox TextArea {get; set;}
+    public Container ResetButton;
+
+    public TextInput(TransparantTextBox textArea)
     {
         Cursor = Cursors.IBeam;
         BackgroundColor = Utils.RGBA("#f0f0f0");
@@ -539,20 +511,55 @@ public class TextInput : Container
         BorderColor = Brushes.LightGray;
         BorderThickness = new(0.5);
         CornerRadius = new(10);
+        TextArea = textArea;
+
+        // RESET BUTTON DEFINITION BEGIN
+        double reset_btn_iconSize = 8.5;
+        double reset_btn_Size = reset_btn_iconSize + 13;
+
+        this.ResetButton = new Container {
+            Height = reset_btn_Size,
+            Width = reset_btn_Size,
+            HoverBgColor = Brushes.LightGray,
+            CornerRadius = new(4),
+            Child = new IconGrid(reset_btn_iconSize, reset_btn_iconSize, App.Icons.Cross)
+        };
+
+        ResetButton.MouseUp += MouseTracker.DefineClick(() => {
+            App.Window.Header.SearchBar.TextArea.Text = "";
+            App.Window.Header.SearchBar.TextArea.Focus();
+        });
+
+        ResetButton.MouseEnter += (e,s) => this.Cursor = Cursors.Hand;
+        ResetButton.MouseLeave += (e,s) => this.Cursor = Cursors.IBeam;
+
+        ResetButton.Visibility = Visibility.Collapsed;
+        // RESET BUTTON DEFINITION END
+
+        this.MouseUp += MouseTracker.DefineClick(() => {
+            if (!this.TextArea.IsFocused) this.TextArea.Focus();
+        });
+    }
+
+
+    protected override void OnMouseLeave(MouseEventArgs e){
+        if (!this.TextArea.IsFocused) {
+            base.OnMouseLeave(e);
+        }
     }
 }
 
 public class SearchBar : TextInput
 {
-    public SearchBarText TextArea;
     public IconGrid Icon;
-    public SearchBarResetButton ResetButton;
     public readonly double TotalWidth = 310;
 
-    public SearchBar() {
+    public SearchBar() : base(new SearchBarText()) {
+        // specifique a la window header
         double _m = 4.5;
         Margin = new(0,_m+0.9,0,_m);
 
+        // LEFT SEARCH ICON BEGIN
         DrawingBrush searchIcon = App.Icons.Search.Clone();
         Utils.ChangeDrawingColor(searchIcon, Utils.RGBA("#808080"));
         searchIcon.Freeze();
@@ -560,13 +567,9 @@ public class SearchBar : TextInput
         double IconSideMargin = 12;
         double IconLength = 12.5;
 
-        Icon = new(IconLength, IconLength, searchIcon){
-            Margin = new(IconSideMargin,0,IconSideMargin,0)
-        };
+        Icon = new(IconLength, IconLength, searchIcon);
+        // LEFT SEARCH ICON END
 
-        TextArea = new SearchBarText();
-
-        ResetButton = new() {Width = 0};
         WindowChrome.SetIsHitTestVisibleInChrome(this, true);
 
         Child = new GridExt() {
@@ -577,15 +580,6 @@ public class SearchBar : TextInput
             ]
         };
 
-        this.MouseUp += MouseTracker.DefineClick(() => {
-            if (!this.TextArea.IsFocused) this.TextArea.Focus();
-        });
-    }
-
-    protected override void OnMouseLeave(MouseEventArgs e){
-        if (!this.TextArea.IsFocused) {
-            base.OnMouseLeave(e);
-        }
     }
 }
 
