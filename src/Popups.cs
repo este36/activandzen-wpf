@@ -304,9 +304,10 @@ public class NewClient : Popup
 		Child = new Border {
 			CornerRadius = new(4),
 			Background = Brushes.WhiteSmoke,
-			Child = new TextBlock {
-				Margin = new(10),
-				Text = "NewClient"
+			Child = new TransparantTextBox() {
+				Height = 40,
+				Width = 200,
+				Margin = new(10)
 			}
 		};
 		

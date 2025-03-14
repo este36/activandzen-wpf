@@ -389,9 +389,21 @@ public partial class WindowHeader : Grid
 
 public class TransparantTextBox : TextBox
 {
-    public Action ?TextChange;
+    private string ?_placeholder;
+    public bool IsTextPlaceholder;
+
+    public string Placeholder
+    {
+        get => _placeholder != null ? _placeholder : string.Empty;
+        set {
+            this.Text = value;
+            _placeholder = value;
+            IsTextPlaceholder = true;
+        }
+    }
 
     public TransparantTextBox() {
+        this.IsTextPlaceholder = false;
         this.FontSize = 13;
         this.Background = Brushes.Transparent;
         this.Background.Freeze();
@@ -399,9 +411,22 @@ public class TransparantTextBox : TextBox
         this.VerticalAlignment = VerticalAlignment.Center;
     }
 
+    public void SetPlaceholder()
+    {
+        this.Text =_placeholder;
+        IsTextPlaceholder = true;
+    }
+
+    public void UnSetPlaceholder()
+    {
+        this.Text = string.Empty;
+        IsTextPlaceholder = false;
+    }
+
     protected override void OnGotFocus(RoutedEventArgs e) {
-        MainWindow.TextBoxIsFocus = true;
         base.OnGotFocus(e);
+        MainWindow.TextBoxIsFocus = true;
+
     }
 
     protected override void OnKeyDown(KeyEventArgs e) {
@@ -414,7 +439,10 @@ public class TransparantTextBox : TextBox
 
 public class SearchBarText : TransparantTextBox
 {
-    public static readonly string Placeholder = "Rechercher un(e) employé(e)";
+    public SearchBarText()
+    {
+        Placeholder = "Rechercher un(e) employé(e)";
+    }
 
     protected override async void OnTextChanged(TextChangedEventArgs e){
         base.OnTextChanged(e);
@@ -501,20 +529,27 @@ public class SearchBarResetButton : Container
     }
 }
 
-public class SearchBar : Container
+public class TextInput : Container
 {
-    public SearchBarText TextArea;
-    public IconGrid Icon;
-    public SearchBarResetButton ResetButton; 
-    public const double TotalWidth = 310;
-
-    public SearchBar() {
-        this.Cursor = Cursors.IBeam;
+    public TextInput()
+    {
+        Cursor = Cursors.IBeam;
         BackgroundColor = Utils.RGBA("#f0f0f0");
-        HoverBgColor = Brushes.WhiteSmoke;// Utils.RGBA("#f9f9f9");
+        HoverBgColor = Brushes.WhiteSmoke;
         BorderColor = Brushes.LightGray;
         BorderThickness = new(0.5);
         CornerRadius = new(10);
+    }
+}
+
+public class SearchBar : TextInput
+{
+    public SearchBarText TextArea;
+    public IconGrid Icon;
+    public SearchBarResetButton ResetButton;
+    public readonly double TotalWidth = 310;
+
+    public SearchBar() {
         double _m = 4.5;
         Margin = new(0,_m+0.9,0,_m);
 
@@ -529,9 +564,7 @@ public class SearchBar : Container
             Margin = new(IconSideMargin,0,IconSideMargin,0)
         };
 
-        TextArea = new SearchBarText() {
-            Text = SearchBarText.Placeholder,
-        };
+        TextArea = new SearchBarText();
 
         ResetButton = new() {Width = 0};
         WindowChrome.SetIsHitTestVisibleInChrome(this, true);
