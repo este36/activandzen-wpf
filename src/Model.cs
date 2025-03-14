@@ -111,7 +111,12 @@ public class Employees
 
 public static class Queries
 {
-
+    
+    public static void Compile()
+    {
+        Employees a = GetPossibleEmployees("!null!");
+        string b = GetClientNameFromId(1);
+    }
     /// <summary>
     /// Get basic infos about every employees
     /// </summary>

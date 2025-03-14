@@ -109,11 +109,13 @@ public partial class MainWindow : Window
         this.InvalidateVisual();
     }
 
-    protected override void OnContentRendered(EventArgs e) {
+    protected override async void OnContentRendered(EventArgs e) {
         base.OnContentRendered(e);
         this.PopupSearch = new();
         this.PopupNewEmployee = new();
         this.PopupNewClient = new();
+
+        await Task.Run(() => Model.Queries.Compile());
     }
 
     protected override void OnKeyDown(KeyEventArgs e) {
@@ -121,11 +123,7 @@ public partial class MainWindow : Window
 
         switch (e.Key) {
             case Key.Escape:
-                // if (this.KeysDown.Count > 0) this.KeysDown.Clear();
-                if (TextBoxIsFocus) {
-                    this.UnvalidButton.Focus();
-                    TextBoxIsFocus = false;
-                }
+                AnyTextBoxUnFocus();
                 break;
         }
     }
@@ -142,9 +140,17 @@ public partial class MainWindow : Window
         }
     }
 
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) {
+        base.OnRenderSizeChanged(sizeInfo);
+        AnyTextBoxUnFocus();
+    }
 
     private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
-        // pour unfocus les textbox
+        AnyTextBoxUnFocus();
+    }
+
+    public void AnyTextBoxUnFocus()
+    {
         if (TextBoxIsFocus) {
             this.UnvalidButton.Focus();
             TextBoxIsFocus = false;
@@ -167,7 +173,7 @@ public partial class MainWindow : Window
 
             // Puis on active le popup demandé
             if (_activePopup != null) {
-                _activePopup.IsOpen = true;    
+                _activePopup.IsOpen = true;  
             }
         }
     }

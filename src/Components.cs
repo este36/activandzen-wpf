@@ -95,6 +95,129 @@ public class Container : Border
     }
 }
 
+
+//////////////////////////////////////////////
+
+// public class Input : Container
+// {
+//     private UIElement ?_inputElement;
+//     public UIElement InputElement {
+//         get => _inputElement == null ? new UIElement() : _inputElement;
+//         set => _inputElement = value;
+//     }
+
+//     public Input()
+//     {
+//         Padding = new(6);
+//         CornerRadius = new(3);
+//     }
+
+//     protected virtual void Validate() {}
+// }
+
+// public class TextInput : Input
+// {
+//     public string Placeholder;
+//     private Container _resetButton;
+//     private TransparantTextBox _textArea;
+//     public bool TextIsPlaceholder { get; set;}
+
+//     public string Text {
+//         get => _textArea.Text;
+//         set => _textArea.Text = value;
+//     }
+
+//     public TextInput(string placeholder)
+//     {
+//         // FocusManager.SetIsFocusScope(this, true);
+//         Placeholder = placeholder;
+//         _textArea = new();
+//         _textArea.Text = Placeholder;
+//         TextIsPlaceholder = true;
+//         _resetButton = createResetButton();
+//         InputElement = _textArea;
+
+//         _textArea.GotFocus += OnTextGotFocus;
+//         _textArea.LostFocus += OnTextLostFocus;
+
+//         Child = new StackPanel {
+//             Height = 20,
+//             Width = 80,
+//             Orientation = Orientation.Horizontal,
+//             Children = {
+//                 _textArea,
+//                 _resetButton
+//             }
+//         };
+//     }
+
+//     public void SetPlaceholder()
+//     {
+//         _textArea.Text = Placeholder;
+//         TextIsPlaceholder = true;
+//     }
+
+//     public void UnsetPlaceholder()
+//     {
+//         _textArea.Text = string.Empty;
+//         TextIsPlaceholder = false;
+//     }
+
+//     private Container createResetButton()
+//     {
+//         double m = 2.5;
+//         double iconSize = 8.5;
+//         IconGrid icon = new IconGrid(iconSize,iconSize, App.Icons.Cross);
+//         icon.Icon.Freeze();
+
+//         Container rb = new() {
+//             Margin = new(m,m*1.5,m,m*1.5),
+//             HoverBgColor = Brushes.LightGray,
+//             CornerRadius = new(2),
+//             Child = icon
+//         };
+
+//         this.MouseUp += MouseTracker.DefineClick(() => {
+//             _textArea.Focus();
+//         });
+
+//         rb.MouseEnter += (e,s) => rb.Cursor = Cursors.Hand;
+//         rb.MouseLeave += (e,s) => rb.Cursor = Cursors.IBeam;
+
+//         return rb;
+//     }
+
+//     public virtual void OnTextGotFocus(object s, RoutedEventArgs e)
+//     {
+//         if (TextIsPlaceholder) UnsetPlaceholder();
+//     }
+
+//     public virtual void OnTextLostFocus(object s, RoutedEventArgs e)
+//     {
+//         if (!TextIsPlaceholder) SetPlaceholder();
+//     }
+
+//     protected override void OnKeyDown(KeyEventArgs e) {
+//         base.OnKeyDown(e);
+//         e.Handled = true;
+
+//         switch (e.Key) {
+//             case Key.Escape:
+//             if (_textArea.Text.Length == 0){
+//                 App.Window.UnFocusTextBox();
+//                 break;
+//             } else if (_textArea.Text != Placeholder) {
+//                 _textArea.Text = string.Empty;
+//             }
+
+//             break;
+//         }
+//     }
+
+// }
+
+//////////////////////////////////////////////
+
 public class CustomTooltip : ToolTip 
 {
     public CustomTooltip(string text) {
@@ -383,10 +506,9 @@ public class SearchBar : Container
     public SearchBarText TextArea;
     public IconGrid Icon;
     public SearchBarResetButton ResetButton; 
-    public double TotalWidth;
+    public const double TotalWidth = 310;
 
     public SearchBar() {
-        this.TotalWidth = 310;
         this.Cursor = Cursors.IBeam;
         BackgroundColor = Utils.RGBA("#f0f0f0");
         HoverBgColor = Brushes.WhiteSmoke;// Utils.RGBA("#f9f9f9");

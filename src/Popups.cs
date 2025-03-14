@@ -180,15 +180,7 @@ public class Search : Popup
     public Search () {
         PlacementTarget = App.Window.Header.SearchBar;
         IsOpen = false;
-        Results = new() {
-        	Children = {
-        		new TextBlock {
-        			Margin = new(6,0,6,0),
-        			Text = "Chargement...",
-        			Foreground = Brushes.Gray
-        		}
-        	}
-        };
+        Results = new();
     	this.Child = new Border {
 			Width = App.Window.Header.SearchBar.TotalWidth,
 			Background = Brushes.WhiteSmoke,
@@ -201,22 +193,22 @@ public class Search : Popup
     }
 
     public async Task BuildResultList(string input) {
-    	 
-    	Results.Children.Clear();
-
-        Employees employees_query = await Task.Run(() => Queries.GetPossibleEmployees(input));
-        input.Trim();
-
-        Results.Children.Clear();
+    	Employees employees_query = await Task.Run(() => Queries.GetPossibleEmployees(input));
+		input.Trim();
 
 		if (employees_query.Count == 0) {
-			Results.Children.Add( new TextBlock {
-				Margin = new(6,0,6,0),
-				Text = "Aucun résultat",
-    			Foreground = Brushes.Gray
-			});
+			if ((Results.Children.Count > 0 && !(Results.Children[0] is TextBlock)) || Results.Children.Count == 0) {
+				Results.Children.Clear();
+				Results.Children.Add( new TextBlock {
+					Margin = new(6,0,6,0),
+					Text = "Aucun résultat",
+					Foreground = Brushes.Gray
+				});
+			}
 			return;
 		}
+
+		Results.Children.Clear();
 
 		employees_query.SortOrderByFilter(input);		
 
