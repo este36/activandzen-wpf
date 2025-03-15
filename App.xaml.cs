@@ -13,6 +13,7 @@ namespace ActivAndZen;
 // MouseTracker
 // Utils
 
+
 public partial class App : Application
 {
     public static bool IsInit = false;
@@ -80,14 +81,15 @@ public static class MouseTracker
     }
 
     public static void previewMouseDown(object sender, MouseButtonEventArgs e) {
-        if (e.OriginalSource is UIElement ui) {
-            LastClickDown.UIElement = ui;
-            // ui.Focus();
-            // MessageBox.Show(ui.ToString());
-        } else if (e.OriginalSource is System.Windows.Documents.Paragraph p) {
-            LastClickDown.Paragraph = p;
-            LastClickDown.UIElement = null;
-        }
+        if (e.LeftButton == MouseButtonState.Pressed)
+            if (e.OriginalSource is UIElement ui) {
+                LastClickDown.UIElement = ui;
+                // ui.Focus();
+                // MessageBox.Show(ui.ToString());
+            } else if (e.OriginalSource is System.Windows.Documents.Paragraph p) {
+                LastClickDown.Paragraph = p;
+                LastClickDown.UIElement = null;
+            }
     }
 
     private static bool WasDown(UIElement e) {

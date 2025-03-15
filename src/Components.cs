@@ -5,6 +5,8 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shell;
 using ActivAndZen.Popups;
+using ActivAndZen.Styles;
+using ActivAndZen.Inputs;
 
 namespace ActivAndZen.Components;
 
@@ -13,7 +15,6 @@ namespace ActivAndZen.Components;
 // IconGrid
 // WindowHandlerButton
 // WindowHeader
-// TransparantTextBox
 // SearchBarText
 // SearchBar
 // Separator
@@ -28,7 +29,6 @@ public class Container : Border
     private Brush ?_backgroundColor;
     private Brush ?_hoverBgColor;
     private Brush ?_borderColor;
-    private Brush ?_hoverBorderColor;
     public bool IsDisable {get;set;}
 
     public Container() {
@@ -61,6 +61,7 @@ public class Container : Border
     }
 
     public Brush BorderColor {
+        get => _borderColor != null ? _borderColor : Brushes.Transparent;
         set {
             _borderColor = value;
             _borderColor.Freeze();
@@ -68,18 +69,10 @@ public class Container : Border
         }
     }
 
-    public Brush HoverBorderColor {
-        set {
-            _hoverBorderColor = value;
-            _hoverBorderColor.Freeze();
-        }
-    }
-
     protected override void OnMouseEnter(MouseEventArgs e) {
         base.OnMouseEnter(e);
         if (!this.IsDisable) {
             if(_hoverBgColor != null) this.Background = _hoverBgColor;
-            if(_hoverBorderColor != null) this.BorderBrush = _hoverBorderColor;    
         }
     }
 
@@ -94,129 +87,6 @@ public class Container : Border
         }
     }
 }
-
-
-//////////////////////////////////////////////
-
-// public class Input : Container
-// {
-//     private UIElement ?_inputElement;
-//     public UIElement InputElement {
-//         get => _inputElement == null ? new UIElement() : _inputElement;
-//         set => _inputElement = value;
-//     }
-
-//     public Input()
-//     {
-//         Padding = new(6);
-//         CornerRadius = new(3);
-//     }
-
-//     protected virtual void Validate() {}
-// }
-
-// public class TextInput : Input
-// {
-//     public string Placeholder;
-//     private Container _resetButton;
-//     private TransparantTextBox _textArea;
-//     public bool TextIsPlaceholder { get; set;}
-
-//     public string Text {
-//         get => _textArea.Text;
-//         set => _textArea.Text = value;
-//     }
-
-//     public TextInput(string placeholder)
-//     {
-//         // FocusManager.SetIsFocusScope(this, true);
-//         Placeholder = placeholder;
-//         _textArea = new();
-//         _textArea.Text = Placeholder;
-//         TextIsPlaceholder = true;
-//         _resetButton = createResetButton();
-//         InputElement = _textArea;
-
-//         _textArea.GotFocus += OnTextGotFocus;
-//         _textArea.LostFocus += OnTextLostFocus;
-
-//         Child = new StackPanel {
-//             Height = 20,
-//             Width = 80,
-//             Orientation = Orientation.Horizontal,
-//             Children = {
-//                 _textArea,
-//                 _resetButton
-//             }
-//         };
-//     }
-
-//     public void SetPlaceholder()
-//     {
-//         _textArea.Text = Placeholder;
-//         TextIsPlaceholder = true;
-//     }
-
-//     public void UnsetPlaceholder()
-//     {
-//         _textArea.Text = string.Empty;
-//         TextIsPlaceholder = false;
-//     }
-
-//     private Container createResetButton()
-//     {
-//         double m = 2.5;
-//         double iconSize = 8.5;
-//         IconGrid icon = new IconGrid(iconSize,iconSize, App.Icons.Cross);
-//         icon.Icon.Freeze();
-
-//         Container rb = new() {
-//             Margin = new(m,m*1.5,m,m*1.5),
-//             HoverBgColor = Brushes.LightGray,
-//             CornerRadius = new(2),
-//             Child = icon
-//         };
-
-//         this.MouseUp += MouseTracker.DefineClick(() => {
-//             _textArea.Focus();
-//         });
-
-//         rb.MouseEnter += (e,s) => rb.Cursor = Cursors.Hand;
-//         rb.MouseLeave += (e,s) => rb.Cursor = Cursors.IBeam;
-
-//         return rb;
-//     }
-
-//     public virtual void OnTextGotFocus(object s, RoutedEventArgs e)
-//     {
-//         if (TextIsPlaceholder) UnsetPlaceholder();
-//     }
-
-//     public virtual void OnTextLostFocus(object s, RoutedEventArgs e)
-//     {
-//         if (!TextIsPlaceholder) SetPlaceholder();
-//     }
-
-//     protected override void OnKeyDown(KeyEventArgs e) {
-//         base.OnKeyDown(e);
-//         e.Handled = true;
-
-//         switch (e.Key) {
-//             case Key.Escape:
-//             if (_textArea.Text.Length == 0){
-//                 App.Window.UnFocusTextBox();
-//                 break;
-//             } else if (_textArea.Text != Placeholder) {
-//                 _textArea.Text = string.Empty;
-//             }
-
-//             break;
-//         }
-//     }
-
-// }
-
-//////////////////////////////////////////////
 
 public class CustomTooltip : ToolTip 
 {
@@ -241,6 +111,11 @@ public class IconGrid : Grid
 
     public IconGrid(double width, double height, DrawingBrush iconRef) 
     {
+        HorizontalAlignment = HorizontalAlignment.Center;
+        VerticalAlignment = VerticalAlignment.Center;
+        Height = height;
+        Width = width;
+
         IconHeight = height;
         IconWidth = width;
         Icon = iconRef;
@@ -339,7 +214,8 @@ public partial class WindowHeader : Grid
             Margin = new(0)
         };
 
-        this.SearchBar = new();
+        this.SearchBar = new() {
+        };
 
         StackPanel winHandlerPanel = new() {
             Orientation = Orientation.Horizontal,
@@ -389,172 +265,12 @@ public partial class WindowHeader : Grid
     }
 }
 
-public class TransparantTextBox : TextBox
-{
-    private string ?_placeholder;
-    public bool IsTextPlaceholder;
-
-    public string Placeholder
-    {
-        get => _placeholder != null ? _placeholder : string.Empty;
-        set {
-            this.Text = value;
-            _placeholder = value;
-            IsTextPlaceholder = true;
-        }
-    }
-
-    public TransparantTextBox() {
-        this.IsTextPlaceholder = false;
-        this.FontSize = 13;
-        this.Background = Brushes.Transparent;
-        this.Background.Freeze();
-        this.BorderThickness = new(0);
-        this.VerticalAlignment = VerticalAlignment.Center;
-    }
-
-    public void SetPlaceholder()
-    {
-        this.Text =_placeholder;
-        IsTextPlaceholder = true;
-    }
-
-    public void UnSetPlaceholder()
-    {
-        this.Text = string.Empty;
-        IsTextPlaceholder = false;
-    }
-
-    protected override void OnGotFocus(RoutedEventArgs e) {
-        base.OnGotFocus(e);
-        MainWindow.TextBoxIsFocus = true;
-        UnSetPlaceholder();
-    }
-
-    protected override void OnLostFocus(RoutedEventArgs e) {
-        base.OnLostFocus(e);
-        SetPlaceholder();
-    }
-
-    protected override void OnKeyDown(KeyEventArgs e) {
-        base.OnKeyDown(e);
-        switch (e.Key) {
-            case Key.Tab: e.Handled = true; break;
-        }
-    }
-}
-
-public class SearchBarText : TransparantTextBox
-{
-    public SearchBarText()
-    {
-        Placeholder = "Rechercher un(e) employé(e)";
-    }
-
-    protected override async void OnTextChanged(TextChangedEventArgs e){
-        base.OnTextChanged(e);
-        if (!App.IsInit) return;
-
-        if (this.Text != Placeholder) {
-            if (this.Text.Length == 0) {
-                App.Window.Header.SearchBar.ResetButton.Visibility = Visibility.Collapsed;
-                App.Window.ActivePopup = null;
-            } else {
-                App.Window.Header.SearchBar.ResetButton.Visibility = Visibility.Visible;
-                await App.Window!.PopupSearch!.BuildResultList(this.Text);
-                App.Window.ActivePopup = App.Window.PopupSearch;
-            }
-        } else {
-            App.Window.Header.SearchBar.ResetButton.Visibility = Visibility.Collapsed;
-            App.Window.ActivePopup = null;
-        }
-    }
-
-    protected override async void OnGotFocus(RoutedEventArgs e) {
-        base.OnGotFocus(e);
-
-        if (!IsTextPlaceholder && this.Text.Length > 0) {
-            await App.Window!.PopupSearch!.BuildResultList(this.Text);
-            App.Window.ActivePopup = App.Window.PopupSearch;
-        }
-
-        App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.HoverBgColor;
-    }
-
-    protected override void OnLostFocus(RoutedEventArgs e) {
-        if (    MouseTracker.LastClickDown.UIElement != App.Window.Header.SearchBar 
-            &&  MouseTracker.LastClickDown.UIElement != App.Window.Header.SearchBar.ResetButton
-            &&  App.Window.Header.SearchBar.ResetButton.Child is Grid resetButtonGrid
-            &&  resetButtonGrid.Children[0] is Grid resetButtonGridChild
-            &&  MouseTracker.LastClickDown.UIElement != resetButtonGridChild
-            &&  App.Window.Header.SearchBar.Icon is Grid g
-            &&  g.Children[0] is Grid c
-            &&  MouseTracker.LastClickDown.UIElement != c
-            ) {
-            base.OnLostFocus(e);
-            App.Window.Header.SearchBar.Background = App.Window.Header.SearchBar.BackgroundColor;
-            App.Window.ActivePopup = null;
-        }
-    }
-}
-
-public class TextInput : Container
-{
-    public TransparantTextBox TextArea {get; set;}
-    public Container ResetButton;
-
-    public TextInput(TransparantTextBox textArea)
-    {
-        Cursor = Cursors.IBeam;
-        BackgroundColor = Utils.RGBA("#f0f0f0");
-        HoverBgColor = Brushes.WhiteSmoke;
-        BorderColor = Brushes.LightGray;
-        BorderThickness = new(0.5);
-        CornerRadius = new(10);
-        TextArea = textArea;
-
-        // RESET BUTTON DEFINITION BEGIN
-        double reset_btn_iconSize = 8.5;
-        double reset_btn_Size = reset_btn_iconSize + 13;
-
-        this.ResetButton = new Container {
-            Height = reset_btn_Size,
-            Width = reset_btn_Size,
-            HoverBgColor = Brushes.LightGray,
-            CornerRadius = new(4),
-            Child = new IconGrid(reset_btn_iconSize, reset_btn_iconSize, App.Icons.Cross)
-        };
-
-        ResetButton.MouseUp += MouseTracker.DefineClick(() => {
-            App.Window.Header.SearchBar.TextArea.Text = "";
-            App.Window.Header.SearchBar.TextArea.Focus();
-        });
-
-        ResetButton.MouseEnter += (e,s) => this.Cursor = Cursors.Hand;
-        ResetButton.MouseLeave += (e,s) => this.Cursor = Cursors.IBeam;
-
-        ResetButton.Visibility = Visibility.Collapsed;
-        // RESET BUTTON DEFINITION END
-
-        this.MouseUp += MouseTracker.DefineClick(() => {
-            if (!this.TextArea.IsFocused) this.TextArea.Focus();
-        });
-    }
-
-
-    protected override void OnMouseLeave(MouseEventArgs e){
-        if (!this.TextArea.IsFocused) {
-            base.OnMouseLeave(e);
-        }
-    }
-}
-
 public class SearchBar : TextInput
 {
     public IconGrid Icon;
     public readonly double TotalWidth = 310;
 
-    public SearchBar() : base(new SearchBarText()) {
+    public SearchBar() {
         // specifique a la window header
         double _m = 4.5;
         Margin = new(0,_m+0.9,0,_m);
@@ -570,6 +286,13 @@ public class SearchBar : TextInput
         Icon = new(IconLength, IconLength, searchIcon);
         // LEFT SEARCH ICON END
 
+        // TEXT AREA DEFINITION
+
+        this.TextArea = new SearchTextField();
+        TextArea.ParentContainer = this;
+
+        // TEXT AREA DEFINITION
+
         WindowChrome.SetIsHitTestVisibleInChrome(this, true);
 
         Child = new GridExt() {
@@ -579,7 +302,44 @@ public class SearchBar : TextInput
                 new GridElement(new(40, GridUnitType.Pixel), ResetButton)
             ]
         };
+    }
 
+    private class SearchTextField : TransparantTextBox
+    {
+        public SearchTextField() 
+        {
+            Placeholder = "Rechercher un(e) employé(e)";
+        }
+
+        protected override async void OnTextChanged(TextChangedEventArgs e) {
+            if (!App.IsInit) return;
+            base.OnTextChanged(e);
+
+            if (this.IsFocused && this.Text.Length != 0) {
+                await App.Window!.PopupSearch!.BuildResultList(this.Text);
+                App.Window.ActivePopup = App.Window.PopupSearch;
+            } else {
+                App.Window.ActivePopup = null;
+
+
+
+            }
+        }
+
+        protected override async void OnGotFocus(RoutedEventArgs e) {
+            base.OnGotFocus(e);
+            if (!IsTextPlaceholder && this.Text.Length > 0) {
+                await App.Window!.PopupSearch!.BuildResultList(this.Text);
+                App.Window.ActivePopup = App.Window.PopupSearch;
+            }
+        }
+
+        protected override void OnLostFocus(RoutedEventArgs e) {
+            if ( ShouldLoseFocus() &&  App.Window.Header.SearchBar.Icon is Grid g &&  g.Children[0] is Grid c &&  MouseTracker.LastClickDown.UIElement != c ) {
+                base.OnLostFocus(e);
+                App.Window.ActivePopup = null;
+            }
+        }   
     }
 }
 

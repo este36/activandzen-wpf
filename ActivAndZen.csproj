@@ -18,6 +18,8 @@
 		<Compile Include="src\Popups.cs" />
 		<Compile Include="src\Model.cs" />
 		<Compile Include="src\Components.cs" />
+		<Compile Include="src\Styles.cs" />
+		<Compile Include="src\Inputs.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

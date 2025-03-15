@@ -1,11 +1,14 @@
 using System.Windows;
 using System.Threading;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Documents;
 using System.Threading.Tasks;
 using ActivAndZen.Model;
 using ActivAndZen.Components;
+using ActivAndZen.Styles;
+using ActivAndZen.Inputs;
 
 namespace ActivAndZen.Popups;
 
@@ -13,8 +16,6 @@ namespace ActivAndZen.Popups;
 
 // PopupEnum
 // Search
-// InputTypeEnum
-// Input
 // Form
 
 public abstract class PopupAdorner : Adorner
@@ -181,13 +182,14 @@ public class Search : Popup
         PlacementTarget = App.Window.Header.SearchBar;
         IsOpen = false;
         Results = new();
+        // KeyboardNavigation.SetTabNavigation(Results, KeyboardNavigationMode.Cycle);
     	this.Child = new Border {
 			Width = App.Window.Header.SearchBar.TotalWidth,
 			Background = Brushes.WhiteSmoke,
-			CornerRadius = new(8),
+			CornerRadius = BorderRadius.r1,
 			BorderThickness = new(0),
 			BorderBrush = Brushes.Gray,
-			Padding = new(0,6,0,6),
+			Padding = new(0,Spacings.Padding.Medium,0,Spacings.Padding.Medium),
 			Child = Results
 		};
     }
@@ -200,7 +202,9 @@ public class Search : Popup
 			if ((Results.Children.Count > 0 && !(Results.Children[0] is TextBlock)) || Results.Children.Count == 0) {
 				Results.Children.Clear();
 				Results.Children.Add( new TextBlock {
-					Margin = new(6,0,6,0),
+					Padding = new(Spacings.Padding.Medium),
+					Margin = new(Spacings.Margin.Medium,0,Spacings.Margin.Medium,0),
+					FontSize = Styles.Spacings.FontSize.Medium,
 					Text = "Aucun résultat",
 					Foreground = Brushes.Gray
 				});
@@ -209,7 +213,6 @@ public class Search : Popup
 		}
 
 		Results.Children.Clear();
-
 		employees_query.SortOrderByFilter(input);		
 
 		for (int i = 0; i < employees_query.Count && i < 5; i++) {
@@ -249,8 +252,8 @@ public class Search : Popup
 
 			HoverBgColor = Brushes.White;
 			CornerRadius = new(4);
-			Padding = new(6);
-			Margin = new(6,0,6,0);
+			Padding = new(Spacings.Padding.Medium);
+			Margin = new(Spacings.Margin.Medium,0,Spacings.Margin.Medium,0);
 
 			Child = new StackPanel {
 				Orientation = Orientation.Horizontal,
@@ -258,6 +261,7 @@ public class Search : Popup
 					_employeeName,
 					new TextBlock {
 						Margin = new(8,0,0,0),
+						FontSize = Styles.Spacings.FontSize.Medium,
 						VerticalAlignment = VerticalAlignment.Center,
 						Text = clientName,
 						FontStyle = FontStyles.Italic,
@@ -265,62 +269,45 @@ public class Search : Popup
 					}
 				}
 			};
+
+			MouseEnter += (e,s) => Cursor = Cursors.Hand;
+			MouseLeave += (e,s) => Cursor = Cursors.Arrow;
 		}
 
 		public void AppendToName(bool isBold, string str) 
 		{
 			this._employeeName.Children.Add( new TextBlock {
 				Text = str,
+				FontSize = Styles.Spacings.FontSize.Medium,
 				FontWeight = isBold ? FontWeights.Bold : FontWeights.Normal
 			});
 		}
 	}
 }
 
-
-// public class Form : Popup
-// {
-// 	public Input[] Inputs;
-
-// 	public Form(int inputs_qty)
-// 	{
-// 		Inputs = new Input[inputs_qty];
-// 	}
-
-// 	protected class Submit : Container
-// 	{
-
-// 	}
-	
-// 	protected void AddInput(Input e)
-// 	{
-// 	}
-	
-// }
-
 public class NewClient : Popup
 {
     public NewClient() : base() {
-		Child = new Border {
-			CornerRadius = new(4),
-			Background = Brushes.WhiteSmoke,
-			Child = new TransparantTextBox() {
-				Height = 40,
-				Width = 200,
-				Margin = new(10)
-			}
-		};
-		
         PlacementTarget = App.Window.ToolsHeader.NewClientButton;
     }
 }
 
 public class NewEmployee : Popup
 {
+	Form Form;
+
     public NewEmployee() {
-		Child = new TextBlock {
-			Text = "NewEmployee"
-		};
+    	Form = new(){
+    		Inputs = [
+    			new TextInput() { DefaultImplementation = true },
+    			new TextInput() { DefaultImplementation = true },
+    		]
+    	};
+
+		Child = this.Form;
+		// Child = new TextBox();
         PlacementTarget = App.Window.ToolsHeader.NewEmployeeButton;
+
+        Form.SubmitBtn.Focus();
     }
 }

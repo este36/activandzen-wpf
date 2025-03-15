@@ -53,6 +53,7 @@ public partial class MainWindow : Window
         MinWidth = WinWidth/2;
         Height = WinHeight/1.5;
         Width = WinWidth/1.5;
+        // PreviewMouseLeftButtonDown += MouseTracker.previewMouseDown;
         PreviewMouseDown += MouseTracker.previewMouseDown;
         UseLayoutRounding = true;
         this.KeysDown = new();
@@ -104,7 +105,6 @@ public partial class MainWindow : Window
         };
 
         this.Focusable = true;
-        this.MouseDown += Window_MouseDown;
         Content = m_rootGrid;
         this.InvalidateVisual();
     }
@@ -140,12 +140,15 @@ public partial class MainWindow : Window
         }
     }
 
-    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) {
+    protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo) 
+    {
         base.OnRenderSizeChanged(sizeInfo);
         AnyTextBoxUnFocus();
     }
 
-    private void Window_MouseDown(object sender, MouseButtonEventArgs e) {
+    protected override void OnMouseDown(MouseButtonEventArgs e) 
+    {
+        base.OnMouseDown(e);
         AnyTextBoxUnFocus();
     }
 
